@@ -9,19 +9,21 @@
 #ifndef STD_TYPES_H_
 #define STD_TYPES_H_
 
+#ifndef bool
 /* Boolean Data Type */
 typedef unsigned char bool;
+#endif
 
 /* Boolean Values */
 #ifndef FALSE
-#define FALSE       (0hhu)
+#define FALSE       (0u)
 #endif
 #ifndef TRUE
-#define TRUE        (1hhu)
+#define TRUE        (1u)
 #endif
 
-#define HIGH        (1hhu)
-#define LOW         (0hhu)
+#define HIGH        (1u)
+#define LOW         (0u)
 
 #ifndef NULL_PTR
 #define NULL_PTR    ((void*)0)
