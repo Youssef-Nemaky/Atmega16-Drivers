@@ -19,7 +19,7 @@ void TIMER0_init(const timer0_config * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
     TCCR0 = (TCCR0 & 0xF8) | (configPtr->timer_prescaler);
     /* Save the required number of ticks which will be checked in the ISR */
-    requiredNumOfTicks = configPtr->tick;
+    requiredNumOfTicks = configPtr->ticks;
     /* Configure the timer mode */
     switch (configPtr->timerMode){
     case TIMER_NORMAL_MODE:
@@ -40,11 +40,11 @@ void TIMER0_init(const timer0_config * configPtr){
         CLEAR_BIT(TCCR0,COM00);
         CLEAR_BIT(TCCR0,COM01);
         /* Disable overflow interrupt in case that ticks are zero */
-        if(configPtr->ticks != 0){
+        if(configPtr->ticks == 0){
             /* Enable Timer overflow interrupt */
-            SET_BIT(TIMSK, TOIE0);
-        } else {
             CLEAR_BIT(TIMSK, TOIE0);
+        } else {
+            SET_BIT(TIMSK, TOIE0);
         }
         /* Disable Timer output compare match match interrupt */
         CLEAR_BIT(TIMSK, OCIE0);

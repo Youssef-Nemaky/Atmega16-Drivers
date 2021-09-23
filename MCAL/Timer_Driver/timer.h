@@ -67,6 +67,9 @@ typedef struct{
 * 							Function Prototypes
 ==============================================================================
 */
-void TIMER0_init(timer0_config * configPtr);
-
+void TIMER0_init(const timer0_config * configPtr);
+void TIMER0_setCallBack(void (*ptrToFunction)(void));
+void TIMER0_stop(void);
+void TIMER0_deInit(void);
+void TIMER0_start(const timer0_config * configPtr);
 #endif /* TIMER_H_ */
