@@ -20,6 +20,8 @@ void TIMER0_init(const timer0_config * configPtr){
     TCCR0 = (TCCR0 & 0xF8) | (configPtr->timer_prescaler);
     /* Save the required number of ticks which will be checked in the ISR */
     requiredNumOfTicks = configPtr->ticks;
+    /* Set the initial value for the timer */
+    TCNT0 = configPtr->timer_initialValue;
     /* Configure the timer mode */
     switch (configPtr->timerMode){
     case TIMER_NORMAL_MODE:
@@ -41,17 +43,20 @@ void TIMER0_init(const timer0_config * configPtr){
         CLEAR_BIT(TCCR0,COM01);
         /* Disable overflow interrupt in case that ticks are zero */
         if(configPtr->ticks == 0){
-            /* Enable Timer overflow interrupt */
+            /* Disable timer overflow interrupt */
             CLEAR_BIT(TIMSK, TOIE0);
         } else {
+            /* Enable timer overflow interrupt */
             SET_BIT(TIMSK, TOIE0);
         }
-        /* Disable Timer output compare match match interrupt */
+        /* Disable timer output compare match interrupt */
         CLEAR_BIT(TIMSK, OCIE0);
         break;   
     case TIMER_CTC_MODE:
         /* Enable force output compare */
         SET_BIT(TCCR0, FOC0);
+        /* Set the timer compare value */
+        OCR0 = configPtr->timer_compareValue;
         /* 
         Set the timer to work on normal mode(overflow) by
         1) Clearing WGM00
@@ -111,10 +116,10 @@ void TIMER0_init(const timer0_config * configPtr){
         /* Disable timer output compare match interrupt in case that ticks are zero */
         if (configPtr->ticks == 0){
             /* Disable timer output compare match interrupt */
-            SET_BIT(TIMSK, OCIE0);
+            CLEAR_BIT(TIMSK, OCIE0);
         } else {
             /* Enable timer output compare match interrupt */
-            CLEAR_BIT(TIMSK, OCIE0);
+            SET_BIT(TIMSK, OCIE0);
         }
         /* Disable timer overflow interrupt  */
         CLEAR_BIT(TIMSK, TOIE0);
@@ -169,10 +174,10 @@ void TIMER0_init(const timer0_config * configPtr){
         /* Disable timer output compare match interrupt in case that ticks are zero */
         if (configPtr->ticks == 0){
             /* Disable timer output compare match interrupt */
-            SET_BIT(TIMSK, OCIE0);
+            CLEAR_BIT(TIMSK, OCIE0);
         } else {
             /* Enable timer output compare match interrupt */
-            CLEAR_BIT(TIMSK, OCIE0);
+            SET_BIT(TIMSK, OCIE0);
         }
         /* Disable timer overflow interrupt  */
         CLEAR_BIT(TIMSK, TOIE0);

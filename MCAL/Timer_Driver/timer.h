@@ -58,6 +58,8 @@ typedef enum{
 typedef struct{
 	timer_mode_t timerMode;
 	timer0_prescaler_t timer_prescaler;
+	uint8 timer_initialValue;
+	uint8 timer_compareValue; /* OCR0 */
 	OC0_pin_mode_t OC0PinMode; /* depends on the mode */
 	uint8 ticks;
 } timer0_config;

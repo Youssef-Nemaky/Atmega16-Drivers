@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "io.h": "c",
-        "common_macros.h": "c"
+        "common_macros.h": "c",
+        "std_types.h": "c"
     }
 }
