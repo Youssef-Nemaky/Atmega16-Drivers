@@ -9,6 +9,12 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
+
+#define NUMBER_OF_TIMERS 3
+
+#define TIMER0_INDEX 0
+#define TIMER1_INDEX 1
+#define TIMER2_INDEX 2
 /*
 ==============================================================================
 * import micro_config.h, common_macros.h and std_types.h files
@@ -38,6 +44,13 @@ typedef enum{
 	OC0_SET_ON_COMPARE_MATCH,
 } OC0_pin_mode_t;
 
+typedef enum{
+	OC1_DISCONNECTED,
+	OC1_TOGGLE_ON_COMPARE_MATCH,
+	OC1_CLEAR_ON_COMPARE_MATCH,
+	OC1_SET_ON_COMPARE_MATCH,
+} OC1_pin_mode_t;
+
 /* maybe delete me */
 typedef enum{
 	PWM_NON_INVERTING_MODE,
@@ -62,16 +75,30 @@ typedef struct{
 	uint8 timer_compareValue; /* OCR0 */
 	OC0_pin_mode_t OC0PinMode; /* depends on the mode */
 	uint8 ticks;
-} timer0_config;
+} timer0_config_t;
+
+
+typedef struct{
+	timer_mode_t timerMode;
+	timer0_prescaler_t timer_prescaler;
+	uint16 timer_initialValue;
+	uint16 timer_compareValueA;
+	uint16 timer_compareValueB;
+	OC1_pin_mode_t OC1APinMode;
+	OC1_pin_mode_t OC1BPinMode;
+	uint8 ticks;
+} timer1_config_t;
 
 /*
 ==============================================================================
 * 							Function Prototypes
 ==============================================================================
 */
-void TIMER0_init(const timer0_config * configPtr);
+void TIMER0_init(const timer0_config_t * configPtr);
 void TIMER0_setCallBack(void (*ptrToFunction)(void));
 void TIMER0_stop(void);
 void TIMER0_deInit(void);
-void TIMER0_start(const timer0_config * configPtr);
+void TIMER0_start(const timer0_config_t * configPtr);
+
+void TIMER1_init(const timer1_config_t * configPtr);
 #endif /* TIMER_H_ */
