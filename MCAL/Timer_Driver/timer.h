@@ -11,10 +11,16 @@
 
 
 #define NUMBER_OF_TIMERS 3
+#define NUMBER_OF_TIMERS_WITH_TWO_CHANNELS 1
+
+
+#define NUMBER_OF_CHANNELS ((NUMBER_OF_TIMERS - NUMBER_OF_TIMERS_WITH_TWO_CHANNELS) + (NUMBER_OF_TIMERS_WITH_TWO_CHANNELS * 2))
 
 #define TIMER0_INDEX 0
-#define TIMER1_INDEX 1
-#define TIMER2_INDEX 2
+#define TIMER1_CHANNEL_A_INDEX 1
+#define TIMER1__CHANNEL_B_INDEX 2
+#define TIMER2_INDEX 3
+
 /*
 ==============================================================================
 * import micro_config.h, common_macros.h and std_types.h files
@@ -86,7 +92,8 @@ typedef struct{
 	uint16 timer_compareValueB;
 	OC1_pin_mode_t OC1APinMode;
 	OC1_pin_mode_t OC1BPinMode;
-	uint8 ticks;
+	uint8 channelA_ticks;
+	uint8 channelB_Ticks;
 } timer1_config_t;
 
 /*

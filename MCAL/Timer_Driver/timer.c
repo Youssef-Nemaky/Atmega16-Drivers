@@ -8,13 +8,17 @@
 
 #include "timer.h"
 
-/* An array that contatins callback pointers that will be called when timer ticks the required number of ticks */
-static void (*timer0_callBackPtr[NUMBER_OF_TIMERS])(void) = NULL_PTR;
+/* Callback pointer for timer0 that will be called when timer ticks reaches the required number of ticks */
+static void (*timer0_callBackPtr)(void) = NULL_PTR;
+
+/* Callback pointer for timer1 channel A that will be called when timer ticks reaches the required number of ticks */
+static void (*timer1_channelA_callBackPtr)(void) = NULL_PTR;
+
 /* An array that contatins the number of ticks for each timer */
-static uint8 numberOfTicks[NUMBER_OF_TIMERS] = 0;
+static uint8 numberOfTicks[NUMBER_OF_CHANNELS] = 0;
 /* An array that contatins the required number of ticks for each timer
  passed from the user in the configuration structure */
-static uint8 requiredNumOfTicks[NUMBER_OF_TIMERS] = 0;
+static uint8 requiredNumOfTicks[NUMBER_OF_CHANNELS] = 0;
 
 void TIMER0_init(const timer0_config_t * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
@@ -126,8 +130,8 @@ void TIMER0_init(const timer0_config_t * configPtr){
         CLEAR_BIT(TIMSK, TOIE0);
         break;
     case TIMER_PWM_MODE:
-        /* Enable force output compare */
-        SET_BIT(TCCR0,FOC0);
+        /* Disable force output compare */
+        CLEAR_BIT(TCCR0,FOC0);
         /* 
         Set the timer to work on fast PWM mode by
         1) Setting WGM00
@@ -191,10 +195,14 @@ void TIMER0_init(const timer0_config_t * configPtr){
 void TIMER1_init(const timer1_config_t * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
     TCCR1B = (TCCR1B & 0xF8) | (configPtr->timer_prescaler);
+    /*EDIT THE COMMENT*/
     /* Save the required number of ticks which will be checked in the ISR */
-    requiredNumOfTicks[TIMER1_INDEX] = configPtr->ticks;
+    requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX] = configPtr->channelA_ticks;
+    requiredNumOfTicks[TIMER1__CHANNEL_B_INDEX] = configPtr->channelB_Ticks;
+
     /* Set the initial value for the timer */
     TCNT1 = configPtr->timer_initialValue;
+
     /* Configure the timer mode */
     switch (configPtr->timerMode){
     case TIMER_NORMAL_MODE:
@@ -202,6 +210,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         SET_BIT(TCCR1A, FOC1A);
         /* Enable force output compare for channel B */
         SET_BIT(TCCR1A, FOC1B);
+
         /* 
         Set the timer to work on normal mode(overflow) by
         1) Clearing WGM10
@@ -273,117 +282,251 @@ void TIMER1_init(const timer1_config_t * configPtr){
         {
         case OC1_DISCONNECTED:
             /* 
-            Disconnect OC1 by
+            Disconnect OC1A by
             1) Clearing COM1A0
             2) Clearing COM1A1
             */
             CLEAR_BIT(TCCR1A, COM1A0);
             CLEAR_BIT(TCCR1A, COM1A1);
             break;
-        case OC0_TOGGLE_ON_COMPARE_MATCH:
+        case OC1_TOGGLE_ON_COMPARE_MATCH:
             /*
-            Toggle OC0 on compare match by
-            1) Making OC0 (PB3) pin output
-            2) Setting COM00
-            3) Clearing COM01
+            Toggle OC1A on compare match by
+            1) Making OC1A (PD5) pin output
+            2) Setting COM1A0
+            3) Clearing COM1A1
             */
-            DDRB |= (1<<PB3);
-            SET_BIT(TCCR0, COM00);
-            CLEAR_BIT(TCCR0, COM01);
+            DDRD |= (1<<PD5);
+            SET_BIT(TCCR1A, COM1A0);
+            CLEAR_BIT(TCCR1A, COM1A1);
             break;
-        case OC0_CLEAR_ON_COMPARE_MATCH:
+        case OC1_CLEAR_ON_COMPARE_MATCH:
             /*
-            Clear OC0 on compare match by
-            1) Making OC0 (PB3) pin output
-            2) Clearing COM00
-            3) Setting  COM01
+            Clear OC1A on compare match by
+            1) Making OC1A (PD5) pin output
+            2) Clearing COM1A0
+            3) Setting  COM1A1
             */
-            DDRB |= (1<<PB3);
-            CLEAR_BIT(TCCR0, COM00);
-            SET_BIT(TCCR0, COM01);
+            DDRD |= (1<<PD5);
+            CLEAR_BIT(TCCR1A, COM1A0);
+            SET_BIT(TCCR1A, COM1A1);
             break;
-        case OC0_SET_ON_COMPARE_MATCH:
+        case OC1_SET_ON_COMPARE_MATCH:
             /*
-            Set OC0 on compare match by
-            1) Making OC0 (PB3) pin output
-            2) Setting COM00
-            3) Setting COM01
+            Set OC1A on compare match by
+            1) Making OC1A (PD5) pin output
+            2) Setting COM1A0
+            3) Setting COM1A1
             */
-            DDRB |= (1<<PB3);
-            SET_BIT(TCCR0, COM00);
-            SET_BIT(TCCR0, COM01);
+            DDRD |= (1<<PD5);
+            SET_BIT(TCCR1A, COM1A0);
+            SET_BIT(TCCR1A, COM1A1);
             break;
         default:
             break;
         }
-        /* Disable timer output compare match interrupt in case that ticks are zero */
-        if (configPtr->ticks == 0){
-            /* Disable timer output compare match interrupt */
-            CLEAR_BIT(TIMSK, OCIE0);
-        } else {
-            /* Enable timer output compare match interrupt */
-            SET_BIT(TIMSK, OCIE0);
+
+        /* Configure OC1B pin */
+        switch (configPtr->OC1BPinMode)
+        {
+        case OC1_DISCONNECTED:
+            /* 
+            Disconnect OC1B by
+            1) Clearing COM1B0
+            2) Clearing COM1B1
+            */
+            CLEAR_BIT(TCCR1A, COM1B0);
+            CLEAR_BIT(TCCR1A, COM1B1);
+            break;
+        case OC1_TOGGLE_ON_COMPARE_MATCH:
+            /*
+            Toggle OC1B on compare match by
+            1) Making OC1B (PD4) pin output
+            2) Setting COM1B0
+            3) Clearing COM1B1
+            */
+            DDRD |= (1<<PD4);
+            SET_BIT(TCCR1A, COM1B0);
+            CLEAR_BIT(TCCR1A, COM1B1);
+            break;
+        case OC1_CLEAR_ON_COMPARE_MATCH:
+            /*
+            Clear OC1B on compare match by
+            1) Making OC1B (PD4) pin output
+            2) Clearing COM1B0
+            3) Setting  COM1B1
+            */
+            DDRD |= (1<<PD4);
+            CLEAR_BIT(TCCR1A, COM1B0);
+            SET_BIT(TCCR1A, COM1B1);
+            break;
+        case OC1_SET_ON_COMPARE_MATCH:
+            /*
+            Set OC1B on compare match by
+            1) Making OC1A (PD4) pin output
+            2) Setting COM1B0
+            3) Setting COM1B1
+            */
+            DDRD |= (1<<PD4);
+            SET_BIT(TCCR1A, COM1B0);
+            SET_BIT(TCCR1A, COM1B1);
+            break;
+        default:
+            break;
         }
+
+        /* Disable timer output compare match for channel A interrupt in case that ticks are zero */
+        if (configPtr->channelA_ticks == 0){
+            /* Disable timer output compare match for channel A interrupt */
+            CLEAR_BIT(TIMSK, OCIE1A);
+        } else {
+            /* Enable timer output compare match for channel A interrupt */
+            SET_BIT(TIMSK, OCIE1A);
+        }
+
+        /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
+        if (configPtr->channelB_ticks == 0){
+            /* Disable timer output compare match for channel B interrupt */
+            CLEAR_BIT(TIMSK, OCIE1B);
+        } else {
+            /* Enable timer output compare match for channel B interrupt */
+            SET_BIT(TIMSK, OCIE1B);
+        }
+
         /* Disable timer overflow interrupt  */
-        CLEAR_BIT(TIMSK, TOIE0);
+        CLEAR_BIT(TIMSK, TOIE1);
+
+        /* Disable input capture unit interrupt */
+        CLEAR_BIT(TIMSK, TICIE1);
+
         break;
     case TIMER_PWM_MODE:
-        /* Enable force output compare */
-        SET_BIT(TCCR0,FOC0);
+        /* Disable force output compare for channel A */
+        CLEAR_BIT(TCCR1A, FOC1A);
+        /* Disable force output compare for channel B */
+        CLEAR_BIT(TCCR1A, FOC1B);
+        
         /* 
         Set the timer to work on fast PWM mode by
-        1) Setting WGM00
-        2) Setting WGM01
+        1) Setting WGM10
+        2) Setting WGM11
+        3) Setting WGM12
+        4) Setting WGM13
         */
-        SET_BIT(TCCR0,WGM00);
-        SET_BIT(TCCR0,WGM01);
-        /* Configure OC0 pin */
-        switch (configPtr->OC0PinMode)
+        SET_BIT(TCCR1A,WGM10);
+        SET_BIT(TCCR1A,WGM11);
+        SET_BIT(TCCR1B,WGM12);
+        SET_BIT(TCCR1B,WGM13);
+
+        /* Configure OC1A pin */
+        switch (configPtr->OC1APinMode)
         {
-        case OC0_DISCONNECTED:
+        case OC1_DISCONNECTED:
             /* 
-            Disconnect OC0 by
-            1) Clearing COM00
-            2) Clearing COM01
+            Disconnect OC1A by
+            1) Clearing COM1A0
+            2) Clearing COM1A1
             */
-            CLEAR_BIT(TCCR0, COM00);
-            CLEAR_BIT(TCCR0, COM01);
+            CLEAR_BIT(TCCR1A, COM1A0);
+            CLEAR_BIT(TCCR1A, COM1A1);
             break;
-        case OC0_CLEAR_ON_COMPARE_MATCH:
-            /*
-            Clear OC0 on compare match (Non-Inverting Mode) by
-            1) Making OC0 (PB3) pin output
-            2) Clearing COM00
-            3) Setting  COM01
+        case OC1_TOGGLE_ON_COMPARE_MATCH:
+            /* 
+            Toggle OC1A on compare match  by
+            1) Setting COM1A0
+            2) Clearing COM1A1
             */
-            DDRB |= (1<<PB3);
-            CLEAR_BIT(TCCR0, COM00);
-            SET_BIT(TCCR0, COM01);
+            SET_BIT(TCCR1A, COM1A0);
+            CLEAR_BIT(TCCR1A, COM1A1);
             break;
-        case OC0_SET_ON_COMPARE_MATCH:
+        case OC1_CLEAR_ON_COMPARE_MATCH:
             /*
-            Set OC0 on compare match (Inverting Mode) by
-            1) Making OC0 (PB3) pin output
-            2) Setting COM00
-            3) Setting COM01
+            Clear OC1A on compare match (Non-Inverting Mode) by
+            1) Making OC1A (PD5) pin output
+            2) Clearing COM1A0
+            3) Setting  COM1A1
             */
-            DDRB |= (1<<PB3);
-            SET_BIT(TCCR0, COM00);
-            SET_BIT(TCCR0, COM01);
+            DDRD |= (1<<PD5);
+            CLEAR_BIT(TCCR1A, COM1A0);
+            SET_BIT(TCCR1A, COM1A1);
+            break;
+        case OC1_SET_ON_COMPARE_MATCH:
+            /*
+            Set OC1A on compare match (Inverting Mode) by
+            1) Making OC1A (PD5) pin output
+            2) Setting COM1A0
+            3) Setting COM1A1
+            */
+            DDRD |= (1<<PD5);
+            SET_BIT(TCCR1A, COM1A0);
+            SET_BIT(TCCR1A, COM1A1);
             break;
         default:
             break;
         }
-        /* Disable timer output compare match interrupt in case that ticks are zero */
-        if (configPtr->ticks == 0){
-            /* Disable timer output compare match interrupt */
-            CLEAR_BIT(TIMSK, OCIE0);
-        } else {
-            /* Enable timer output compare match interrupt */
-            SET_BIT(TIMSK, OCIE0);
+
+        /* Configure OC1B pin */
+        switch (configPtr->OC1BPinMode)
+        {
+        case OC1_DISCONNECTED:
+            /* 
+            Disconnect OC1B by
+            1) Clearing COM1B0
+            2) Clearing COM1B1
+            */
+            CLEAR_BIT(TCCR1A, COM1B0);
+            CLEAR_BIT(TCCR1A, COM1B1);
+            break;
+        case OC1_CLEAR_ON_COMPARE_MATCH:
+            /*
+            Clear OC1B on compare match (Non-Inverting Mode) by
+            1) Making OC1B (PD4) pin output
+            2) Clearing COM1B0
+            3) Setting  COM1B1
+            */
+            DDRD |= (1<<PD4);
+            CLEAR_BIT(TCCR1A, COM1B0);
+            SET_BIT(TCCR1A, COM1B1);
+            break;
+        case OC1_SET_ON_COMPARE_MATCH:
+            /*
+            Set OC1B on compare match (Inverting Mode) by
+            1) Making OC1B (PD4) pin output
+            2) Setting COM1B0
+            3) Setting COM1B1
+            */
+            DDRD |= (1<<PD4);
+            SET_BIT(TCCR1A, COM1B0);
+            SET_BIT(TCCR1A, COM1B1);
+            break;
+        default:
+            break;
         }
+
+        /* Disable timer output compare match for channel A interrupt in case that ticks are zero */
+        if (configPtr->channelA_ticks == 0){
+            /* Disable timer output compare match for channel A interrupt */
+            CLEAR_BIT(TIMSK, OCIE1A);
+        } else {
+            /* Enable timer output compare match for channel A interrupt */
+            SET_BIT(TIMSK, OCIE1A);
+        }
+
+        /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
+        if (configPtr->channelB_ticks == 0){
+            /* Disable timer output compare match for channel B interrupt */
+            CLEAR_BIT(TIMSK, OCIE1B);
+        } else {
+            /* Enable timer output compare match for channel B interrupt */
+            SET_BIT(TIMSK, OCIE1B);
+        }
+
         /* Disable timer overflow interrupt  */
-        CLEAR_BIT(TIMSK, TOIE0);
+        CLEAR_BIT(TIMSK, TOIE1);
+
+        /* Disable input capture unit interrupt */
+        CLEAR_BIT(TIMSK, TICIE1);
+
         break;     
     default:
         break;
@@ -391,7 +534,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
 }
 
 void TIMER0_setCallBack(void (*ptrToFunction)(void)){
-    timer0_callBackPtr[TIMER0_INDEX] = ptrToFunction;
+    timer0_callBackPtr = ptrToFunction;
 }
 
 
@@ -427,4 +570,16 @@ ISR(TIMER0_COMP_vect){
             (*timer0_callBackPtr)();
         }
     }
+}
+
+void TIMER1_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelA_callBackPtr = ptrToFunction;
+}
+
+void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelA_callBackPtr = ptrToFunction;
+}
+
+void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelB_callBackPtr = ptrToFunction;
 }
