@@ -15,10 +15,10 @@ static void (*timer0_callBackPtr)(void) = NULL_PTR;
 static void (*timer1_channelA_callBackPtr)(void) = NULL_PTR;
 
 /* An array that contatins the number of ticks for each timer */
-static uint8 numberOfTicks[NUMBER_OF_CHANNELS] = 0;
+static uint8 numberOfTicks[NUMBER_OF_CHANNELS] = {0};
 /* An array that contatins the required number of ticks for each timer
  passed from the user in the configuration structure */
-static uint8 requiredNumOfTicks[NUMBER_OF_CHANNELS] = 0;
+static uint8 requiredNumOfTicks[NUMBER_OF_CHANNELS] = {0};
 
 void TIMER0_init(const timer0_config_t * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
@@ -239,7 +239,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         CLEAR_BIT(TCCR1A,COM1B1);
 
         /* Disable overflow interrupt in case that ticks are zero */
-        if(configPtr->ticks == 0){
+        if(configPtr->channelA_ticks == 0){
             /* Disable timer overflow interrupt */
             CLEAR_BIT(TIMSK, TOIE1);
         } else {
@@ -385,7 +385,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         }
 
         /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
-        if (configPtr->channelB_ticks == 0){
+        if (configPtr->channelB_Ticks == 0){
             /* Disable timer output compare match for channel B interrupt */
             CLEAR_BIT(TIMSK, OCIE1B);
         } else {
@@ -513,7 +513,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         }
 
         /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
-        if (configPtr->channelB_ticks == 0){
+        if (configPtr->channelB_Ticks == 0){
             /* Disable timer output compare match for channel B interrupt */
             CLEAR_BIT(TIMSK, OCIE1B);
         } else {
@@ -579,7 +579,19 @@ void TIMER1_setCallBack(void (*ptrToFunction)(void)){
 void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void)){
     timer1_channelA_callBackPtr = ptrToFunction;
 }
-
+/*
 void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void)){
     timer1_channelB_callBackPtr = ptrToFunction;
 }
+*/
+
+ISR(TIMER1_OVF_vect){
+    numberOfTicks[TIMER1_CHANNEL_A_INDEX]++;
+    if(numberOfTicks[TIMER1_CHANNEL_A_INDEX] == requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX]){
+        numberOfTicks[TIMER1_CHANNEL_A_INDEX] = 0;
+        if(timer1_channelA_callBackPtr != NULL_PTR){
+            (*timer1_channelA_callBackPtr)();
+        }
+    }
+}
+
