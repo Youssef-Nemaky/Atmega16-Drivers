@@ -18,7 +18,7 @@
 
 #define TIMER0_INDEX 0
 #define TIMER1_CHANNEL_A_INDEX 1
-#define TIMER1__CHANNEL_B_INDEX 2
+#define TIMER1_CHANNEL_B_INDEX 2
 #define TIMER2_INDEX 3
 
 /*
@@ -110,6 +110,7 @@ void TIMER0_setCallBack(void (*ptrToFunction)(void));
 void TIMER0_stop(void);
 void TIMER0_deInit(void);
 void TIMER0_start(const timer0_config_t * configPtr);
+void TIMER0_set_duty(uint8 duty);
 
 void TIMER1_init(const timer1_config_t * configPtr);
 void TIMER1_setCallBack(void (*ptrToFunction)(void));
@@ -118,5 +119,5 @@ void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void));
 void TIMER1_stop(void);
 void TIMER1_deInit(void);
 void TIMER1_start(const timer1_config_t * configPtr);
-
+void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber);
 #endif /* TIMER_H_ */

@@ -201,7 +201,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
     /*EDIT THE COMMENT*/
     /* Save the required number of ticks which will be checked in the ISR */
     requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX] = configPtr->channelA_ticks;
-    requiredNumOfTicks[TIMER1__CHANNEL_B_INDEX] = configPtr->channelB_ticks;
+    requiredNumOfTicks[TIMER1_CHANNEL_B_INDEX] = configPtr->channelB_ticks;
 
     /* Set the initial value for the timer */
     TCNT1 = configPtr->timer_initialValue;
@@ -599,7 +599,7 @@ void TIMER1_deInit(void){
     /* Reset Counter Register */
     TCNT1 = 0;
     /* Reset Output Compare Registers */
-    OCR1A = 0
+    OCR1A = 0;
     OCR1B = 0;
     /* Reset Timer Control Registers */
     TCCR1A = 0;
