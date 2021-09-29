@@ -198,7 +198,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
     /*EDIT THE COMMENT*/
     /* Save the required number of ticks which will be checked in the ISR */
     requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX] = configPtr->channelA_ticks;
-    requiredNumOfTicks[TIMER1__CHANNEL_B_INDEX] = configPtr->channelB_Ticks;
+    requiredNumOfTicks[TIMER1__CHANNEL_B_INDEX] = configPtr->channelB_ticks;
 
     /* Set the initial value for the timer */
     TCNT1 = configPtr->timer_initialValue;
@@ -385,7 +385,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         }
 
         /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
-        if (configPtr->channelB_Ticks == 0){
+        if (configPtr->channelB_ticks == 0){
             /* Disable timer output compare match for channel B interrupt */
             CLEAR_BIT(TIMSK, OCIE1B);
         } else {
@@ -406,6 +406,10 @@ void TIMER1_init(const timer1_config_t * configPtr){
         /* Disable force output compare for channel B */
         CLEAR_BIT(TCCR1A, FOC1B);
         
+        /* Set the timer compare value for channel A */
+        OCR1A = configPtr->timer_compareValueA;
+        /* Set the timer compare value for channel B */
+        OCR1B = configPtr->timer_compareValueB;
         /* 
         Set the timer to work on fast PWM mode by
         1) Setting WGM10
@@ -513,7 +517,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
         }
 
         /* Disable timer output compare match for channel B interrupt in case that ticks are zero */
-        if (configPtr->channelB_Ticks == 0){
+        if (configPtr->channelB_ticks == 0){
             /* Disable timer output compare match for channel B interrupt */
             CLEAR_BIT(TIMSK, OCIE1B);
         } else {
@@ -586,6 +590,16 @@ void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void)){
 */
 
 ISR(TIMER1_OVF_vect){
+    numberOfTicks[TIMER1_CHANNEL_A_INDEX]++;
+    if(numberOfTicks[TIMER1_CHANNEL_A_INDEX] == requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX]){
+        numberOfTicks[TIMER1_CHANNEL_A_INDEX] = 0;
+        if(timer1_channelA_callBackPtr != NULL_PTR){
+            (*timer1_channelA_callBackPtr)();
+        }
+    }
+}
+
+ISR(TIMER1_COMPA_vect){
     numberOfTicks[TIMER1_CHANNEL_A_INDEX]++;
     if(numberOfTicks[TIMER1_CHANNEL_A_INDEX] == requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX]){
         numberOfTicks[TIMER1_CHANNEL_A_INDEX] = 0;

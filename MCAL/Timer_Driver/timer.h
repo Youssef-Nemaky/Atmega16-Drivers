@@ -93,7 +93,7 @@ typedef struct{
 	OC1_pin_mode_t OC1APinMode;
 	OC1_pin_mode_t OC1BPinMode;
 	uint8 channelA_ticks;
-	uint8 channelB_Ticks;
+	uint8 channelB_ticks;
 } timer1_config_t;
 
 /*
@@ -108,4 +108,5 @@ void TIMER0_deInit(void);
 void TIMER0_start(const timer0_config_t * configPtr);
 
 void TIMER1_init(const timer1_config_t * configPtr);
+void TIMER1_setCallBack(void (*ptrToFunction)(void));
 #endif /* TIMER_H_ */
