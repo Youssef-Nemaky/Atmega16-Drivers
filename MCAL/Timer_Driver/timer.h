@@ -83,6 +83,10 @@ typedef struct{
 	uint8 ticks;
 } timer0_config_t;
 
+typedef enum{
+	CHANNEL_A,
+	CHANNEL_B,
+} timer1_channel_number_t;
 
 typedef struct{
 	timer_mode_t timerMode;
@@ -109,4 +113,10 @@ void TIMER0_start(const timer0_config_t * configPtr);
 
 void TIMER1_init(const timer1_config_t * configPtr);
 void TIMER1_setCallBack(void (*ptrToFunction)(void));
+void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void));
+void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void));
+void TIMER1_stop(void);
+void TIMER1_deInit(void);
+void TIMER1_start(const timer1_config_t * configPtr);
+
 #endif /* TIMER_H_ */
