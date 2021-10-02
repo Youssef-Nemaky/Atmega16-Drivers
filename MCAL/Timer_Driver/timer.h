@@ -74,6 +74,18 @@ typedef enum{
 	EX_CLK_RISING_EDGE,
 } timer0_prescaler_t;
 
+typedef enum{
+	NO_CLOCK,
+	F_CPU_1,
+	F_CPU_8,
+	F_CPU_32,
+	F_CPU_64,
+	F_CPU_128,
+	F_CPU_256,
+	F_CPU_1024,
+} timer2_prescaler_t;
+
+
 typedef struct{
 	timer_mode_t timerMode;
 	timer0_prescaler_t timer_prescaler;
@@ -100,6 +112,23 @@ typedef struct{
 	uint8 channelB_ticks;
 } timer1_config_t;
 
+typedef enum{
+	INTERNAL_CLOCK, /* AS2 = 0 */
+	EXTERNAL_CLOCK, /* AS2 = 1 */
+} timer2_clockMode_t;
+
+typedef struct{
+	timer_mode_t timerMode;
+	timer2_prescaler_t timer_prescaler;
+	timer2_clockMode_t clockMode;
+	uint8 timer_initialValue;
+	uint8 timer_compareValue;
+	OC0_pin_mode_t OC0PinMode;
+	uint8 ticks;
+} timer2_config_t;
+
+
+
 /*
 ==============================================================================
 * 							Function Prototypes
@@ -120,4 +149,12 @@ void TIMER1_stop(void);
 void TIMER1_deInit(void);
 void TIMER1_start(const timer1_config_t * configPtr);
 void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber);
+
+
+void TIMER2_init(const timer0_config_t * configPtr);
+void TIMER2_setCallBack(void (*ptrToFunction)(void));
+void TIMER2_stop(void);
+void TIMER2_deInit(void);
+void TIMER2_start(const timer0_config_t * configPtr);
+void TIMER2_set_duty(uint8 duty);
 #endif /* TIMER_H_ */
