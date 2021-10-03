@@ -57,6 +57,13 @@ typedef enum{
 	OC1_SET_ON_COMPARE_MATCH,
 } OC1_pin_mode_t;
 
+typedef enum{
+	OC2_DISCONNECTED,
+	OC2_TOGGLE_ON_COMPARE_MATCH,
+	OC2_CLEAR_ON_COMPARE_MATCH,
+	OC2_SET_ON_COMPARE_MATCH,
+} OC2_pin_mode_t;
+
 /* maybe delete me */
 typedef enum{
 	PWM_NON_INVERTING_MODE,
@@ -123,7 +130,7 @@ typedef struct{
 	timer2_clockMode_t clockMode;
 	uint8 timer_initialValue;
 	uint8 timer_compareValue;
-	OC0_pin_mode_t OC0PinMode;
+	OC2_pin_mode_t OC2PinMode;
 	uint8 ticks;
 } timer2_config_t;
 

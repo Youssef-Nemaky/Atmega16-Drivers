@@ -17,6 +17,9 @@ static void (*timer1_channelA_callBackPtr)(void) = NULL_PTR;
 /* Callback pointer for timer1 channel B that will be called when timer ticks reaches the required number of ticks */
 static void (*timer1_channelB_callBackPtr)(void) = NULL_PTR;
 
+/* Callback pointer for timer2 that will be called when timer ticks reaches the required number of ticks */
+static void (*timer2_callBackPTr)(void) = NULL_PTR;
+
 /* An array that contatins the number of ticks for each timer */
 static volatile uint8 numberOfTicks[NUMBER_OF_CHANNELS] = {0};
 /* An array that contatins the required number of ticks for each timer
@@ -540,6 +543,221 @@ void TIMER1_init(const timer1_config_t * configPtr){
     }
 }
 
+void TIMER2_init(timer2_config_t * configPtr){
+    /* According to the datasheet */
+    /* Warning: When switching between asynchronous and synchronous clocking of
+    Timer/Counter2, the Timer Registers TCNT2, OCR2, and TCCR2 might be corrupted. A
+    safe procedure for switching clock source is:
+    1. Disable the Timer/Counter2 interrupts by clearing OCIE2 and TOIE2.
+    2. Select clock source by setting AS2 as appropriate.
+    3. Write new values to TCNT2, OCR2, and TCCR2.
+    4. To switch to asynchronous operation: Wait for TCN2UB, OCR2UB, and TCR2UB.
+    5. Clear the Timer/Counter2 Interrupt Flags.
+    6. Enable interrupts, if needed. */
+
+    /* Disable Timer/Counter2 interrupts */
+    CLEAR_BIT(TIMSK, TOIE2); /* Disable Timer2 overflow interrupt */
+    CLEAR_BIT(TIMSK, OCIE2); /* Disable Timer2 output compare match interrupt */
+    
+    /* Select Clock Source */
+    ASSR = (ASSR & 0xF7) | ((configPtr->clockMode)<<AS2);
+
+    /* Write new values to TCNT2, OCR2 and TCCR2 */
+    
+    /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
+    TCCR2 = (TCCR2 & 0xF8) | (configPtr->timer_prescaler);
+
+    /* Save the required number of ticks which will be checked in the ISR */
+    requiredNumOfTicks[TIMER2_INDEX] = configPtr->ticks;
+
+    /* Set the initial value for the timer */
+    TCNT2 = configPtr->timer_initialValue;
+
+    /* Configure the timer mode */
+    switch (configPtr->timerMode)
+    {
+    case TIMER_NORMAL_MODE:
+        /* Enable force output compare */
+        SET_BIT(TCCR2, FOC2);
+        /* 
+            Set the timer to work on normal mode(overflow) by
+            1) Clearing WGM20
+            2) Clearing WGM21
+            */
+        CLEAR_BIT(TCCR2, WGM20);
+        CLEAR_BIT(TCCR2, WGM21);
+        /* 
+            Disconnect OC2 pin as the timer is working in overflow mode by
+            1) Clearing COM20
+            2) Clearing COM21
+            */
+        CLEAR_BIT(TCCR2, COM20);
+        CLEAR_BIT(TCCR2, COM21);
+
+        break;
+    case TIMER_CTC_MODE:
+        /* Enable force output compare */
+        SET_BIT(TCCR2, FOC2);
+        /* Set the timer compare value */
+        OCR2 = configPtr->timer_compareValue;
+        /* 
+            Set the timer to work on CTC mode by
+            1) Clearing WGM20
+            2) Setting WGM21
+            */
+        CLEAR_BIT(TCCR2, WGM20);
+        SET_BIT(TCCR2, WGM21);
+
+        /* Configure OC2 pin */
+        switch (configPtr->OC2PinMode)
+        {
+        case OC2_DISCONNECTED:
+            /* 
+                Disconnect OC2 by
+                1) Clearing COM20
+                2) Clearing COM21
+                */
+            CLEAR_BIT(TCCR2, COM20);
+            CLEAR_BIT(TCCR2, COM21);
+            break;
+        case OC2_TOGGLE_ON_COMPARE_MATCH:
+            /*
+                Toggle OC2 on compare match by
+                1) Making OC2 (PD7) pin output
+                2) Setting COM20
+                3) Clearing COM21
+                */
+            DDRD |= (1 << PD7);
+            SET_BIT(TCCR2, COM20);
+            CLEAR_BIT(TCCR2, COM21);
+            break;
+        case OC2_CLEAR_ON_COMPARE_MATCH:
+            /*
+                Clear OC2 on compare match by
+                1) Making OC2 (PD7) pin output
+                2) Clearing COM20
+                3) Setting  COM21
+                */
+            DDRD |= (1 << PD7);
+            CLEAR_BIT(TCCR2, COM20);
+            SET_BIT(TCCR2, COM21);
+            break;
+        case OC2_SET_ON_COMPARE_MATCH:
+            /*
+                Set OC2 on compare match by
+                1) Making OC2 (PD7) pin output
+                2) Setting COM20
+                3) Setting COM21
+                */
+            DDRD |= (1 << PD7);
+            SET_BIT(TCCR2, COM20);
+            SET_BIT(TCCR2, COM21);
+            break;
+        default:
+            break;
+        }
+        break;
+    case TIMER_PWM_MODE:
+        /* Disable force output compare */
+        CLEAR_BIT(TCCR2, FOC2);
+        /* 
+            Set the timer to work on fast PWM mode by
+            1) Setting WGM20
+            2) Setting WGM21
+            */
+        SET_BIT(TCCR2, WGM20);
+        SET_BIT(TCCR2, WGM21);
+        /* Configure OC2 pin */
+        switch (configPtr->OC2PinMode)
+        {
+        case OC2_DISCONNECTED:
+            /* 
+            Disconnect OC2 by
+            1) Clearing COM20
+            2) Clearing COM21
+            */
+            CLEAR_BIT(TCCR2, COM20);
+            CLEAR_BIT(TCCR2, COM21);
+            break;
+        case OC2_CLEAR_ON_COMPARE_MATCH:
+            /*
+            Clear OC2 on compare match (Non-Inverting Mode) by
+            1) Making OC2 (PD7) pin output
+            2) Clearing COM20
+            3) Setting  COM21
+            */
+            DDRD |= (1 << PD7);
+            CLEAR_BIT(TCCR2, COM20);
+            SET_BIT(TCCR2, COM21);
+            break;
+        case OC2_SET_ON_COMPARE_MATCH:
+            /*
+            Set OC2 on compare match (Inverting Mode) by
+            1) Making OC2 (PD7) pin output
+            2) Setting COM20
+            3) Setting COM21
+            */
+            DDRD |= (1 << PD7);
+            SET_BIT(TCCR2, COM20);
+            SET_BIT(TCCR2, COM21);
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+    /* Wait for TCN2UB, OCR2UB, and TCR2UB */
+    while(ASSR & ( (1<<TCN2UB) | (1<<OCR2UB) | (1<<TCR2UB) ) );
+
+    /* Clear the Timer/Counter2 Interrupt Flags */
+    /* Clear output compare flag by setting OCF2 */
+    SET_BIT(TIFR, OCF2);
+    /* Clear timer/counter2 overflow flag */
+    SET_BIT(TIFR, TOV2);
+
+    /* Enable interrupts */
+    switch (configPtr->timerMode)
+    {
+    case TIMER_NORMAL_MODE:
+        /* Disable overflow interrupt in case that ticks are zero */
+        if(configPtr->ticks == 0){
+            CLEAR_BIT(TIMSK, TOIE2);
+        } else {
+            SET_BIT(TIMSK, TOIE2);
+        }
+
+        /* Disable timer output compare match interrupt */
+        CLEAR_BIT(TIMSK, OCIE2);
+        break;
+    case TIMER_CTC_MODE:
+        /* Disable timer output compare match interrupt in case ticks are zero */
+        if(configPtr->ticks == 0 ){
+            CLEAR_BIT(TIMSK, OCIE2);
+        } else {
+            SET_BIT(TIMSK, OCIE2);
+        }
+
+        /* Disable overflow interrupt */
+        CLEAR_BIT(TIMSK, TOV2);
+        break;
+    case TIMER_PWM_MODE:
+        /* Disable timer output compare match interrupt in case that ticks are zero */
+        if(configPtr->ticks == 0){
+            CLEAR_BIT(TIMSK, OCIE2);
+        } else {
+            CLEAR_BIT(TIMSK, OCIE2);
+        }
+
+        /* Disable timer overflow interrupt */
+        CLEAR_BIT(TIMSK, TOIE2);
+        break;
+    default:
+        break;
+    }
+}
+
 void TIMER0_setCallBack(void (*ptrToFunction)(void)){
     timer0_callBackPtr = ptrToFunction;
 }
@@ -661,3 +879,47 @@ ISR(TIMER1_COMPB_vect){
         }
     }
 }
+
+void TIMER2_setCallBack(void (*ptrToFunction)(void)){
+    timer2_callBackPtr = ptrToFunction;
+}
+
+
+void TIMER2_deInit(void){
+    TCCR2 = 0;
+    CLEAR_BIT(TIMSK, TOIE2);
+    CLEAR_BIT(TIMSK, OCIE2);
+}
+
+void TIMER2_start(const timer2_config_t * configPtr){
+    TCCR2 = (TCCR2 & 0xF8) | (configPtr->timer_prescaler);
+}
+
+void TIMER2_stop(void){
+    TCCR2 = (TCCR2 & 0xF8) | NO_CLOCK;
+}
+
+void TIMER2_set_duty_cycle(uint8 duty){
+    OCR2 = duty;
+}
+
+ISR(TIMER2_OVF_vect){
+    numberOfTicks[TIMER2_INDEX]++;
+    if(numberOfTicks[TIMER2_INDEX] == requiredNumOfTicks[TIMER2_INDEX]){
+        numberOfTicks[TIMER2_INDEX] = 0;
+        if(timer2_callBackPtr != NULL_PTR){
+            (*timer2_callBackPtr)();
+        }
+    }
+}
+
+ISR(TIMER2_COMP_vect){
+    numberOfTicks[TIMER2_INDEX]++;
+    if(numberOfTicks[TIMER2_INDEX] == requiredNumOfTicks[TIMER2_INDEX]){
+        numberOfTicks[TIMER2_INDEX] = 0;
+        if(timer2_callBackPtr != NULL_PTR){
+            (*timer2_callBackPtr)();
+        }
+    }
+}
+
