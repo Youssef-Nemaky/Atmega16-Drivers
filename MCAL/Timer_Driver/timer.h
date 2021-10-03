@@ -30,7 +30,6 @@
 #include "../Important_Header_Files/common_macros.h"
 #include "../Important_Header_Files/std_types.h"
 
-
 /*
 ==============================================================================
 * 								   Types
@@ -158,10 +157,10 @@ void TIMER1_start(const timer1_config_t * configPtr);
 void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber);
 
 
-void TIMER2_init(const timer0_config_t * configPtr);
+void TIMER2_init(const timer2_config_t * configPtr);
 void TIMER2_setCallBack(void (*ptrToFunction)(void));
 void TIMER2_stop(void);
 void TIMER2_deInit(void);
-void TIMER2_start(const timer0_config_t * configPtr);
+void TIMER2_start(const timer2_config_t * configPtr);
 void TIMER2_set_duty(uint8 duty);
 #endif /* TIMER_H_ */

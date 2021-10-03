@@ -18,7 +18,7 @@ static void (*timer1_channelA_callBackPtr)(void) = NULL_PTR;
 static void (*timer1_channelB_callBackPtr)(void) = NULL_PTR;
 
 /* Callback pointer for timer2 that will be called when timer ticks reaches the required number of ticks */
-static void (*timer2_callBackPTr)(void) = NULL_PTR;
+static void (*timer2_callBackPtr)(void) = NULL_PTR;
 
 /* An array that contatins the number of ticks for each timer */
 static volatile uint8 numberOfTicks[NUMBER_OF_CHANNELS] = {0};
@@ -543,7 +543,7 @@ void TIMER1_init(const timer1_config_t * configPtr){
     }
 }
 
-void TIMER2_init(timer2_config_t * configPtr){
+void TIMER2_init(const timer2_config_t * configPtr){
     /* According to the datasheet */
     /* Warning: When switching between asynchronous and synchronous clocking of
     Timer/Counter2, the Timer Registers TCNT2, OCR2, and TCCR2 might be corrupted. A
