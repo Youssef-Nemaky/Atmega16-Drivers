@@ -26,6 +26,12 @@ static volatile uint8 numberOfTicks[NUMBER_OF_CHANNELS] = {0};
  passed from the user in the configuration structure */
 static volatile uint8 requiredNumOfTicks[NUMBER_OF_CHANNELS] = {0};
 
+
+/*
+==============================================================================
+* 								 TIMER 0 Functions 
+==============================================================================
+*/
 void TIMER0_init(const timer0_config_t * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
     TCCR0 = (TCCR0 & 0xF8) | (configPtr->timer_prescaler);
@@ -198,6 +204,34 @@ void TIMER0_init(const timer0_config_t * configPtr){
     }
 }
 
+void TIMER0_setCallBack(void (*ptrToFunction)(void)){
+    timer0_callBackPtr = ptrToFunction;
+}
+
+
+void TIMER0_deInit(void){
+    TCCR0 = 0;
+    CLEAR_BIT(TIMSK, TOIE0);
+    CLEAR_BIT(TIMSK, OCIE0);
+}
+
+void TIMER0_start(const timer0_config_t * configPtr){
+    TCCR0 = (TCCR0 & 0xF8) | (configPtr->timer_prescaler);
+}
+
+void TIMER0_stop(void){
+    TCCR0 = (TCCR0 & 0xF8) | T0_NO_CLOCK;
+}
+
+void TIMER0_set_duty_cycle(uint8 duty){
+    OCR0 = duty;
+}
+
+/*
+==============================================================================
+* 								 TIMER 1 Functions 
+==============================================================================
+*/
 void TIMER1_init(const timer1_config_t * configPtr){
     /* Set the prescaler by clearing the first 3 bits and then ORing with the timer_prescaler */
     TCCR1B = (TCCR1B & 0xF8) | (configPtr->timer_prescaler);
@@ -543,6 +577,60 @@ void TIMER1_init(const timer1_config_t * configPtr){
     }
 }
 
+void TIMER1_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelA_callBackPtr = ptrToFunction;
+}
+
+void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelA_callBackPtr = ptrToFunction;
+}
+
+void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void)){
+    timer1_channelB_callBackPtr = ptrToFunction;
+}
+
+void TIMER1_deInit(void){
+    /* Reset Counter Register */
+    TCNT1 = 0;
+    /* Reset Output Compare Registers */
+    OCR1A = 0;
+    OCR1B = 0;
+    /* Reset Timer Control Registers */
+    TCCR1A = 0;
+    TCCR1B = 0;
+    /* Disable Timer Interrupts */
+    CLEAR_BIT(TIMSK, TOIE1); /* Overflow Interrupt */
+    CLEAR_BIT(TIMSK, OCIE1A); /* Output Compare Interrupt for Channel A */
+    CLEAR_BIT(TIMSK, OCIE1B); /* Output Compare Interrupt  for Channel B */
+    CLEAR_BIT(TIMSK, TICIE1); /* Input Capture Interrupt */
+}
+
+void TIMER1_start(const timer1_config_t * configPtr){
+    TCCR1B = (TCCR1B & 0xF8) | (configPtr->timer_prescaler);
+}
+
+void TIMER1_stop(void){
+    TCCR1B = (TCCR1B & 0xF8) | T1_NO_CLOCK;
+}
+
+void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber){
+    switch (channelNumber)
+    {
+    case CHANNEL_A:
+        OCR1A = duty;
+        break;
+    case CHANNEL_B:
+        OCR1B = duty;
+    default:
+        break;
+    }
+}
+
+/*
+==============================================================================
+* 								 TIMER 2 Functions 
+==============================================================================
+*/
 void TIMER2_init(const timer2_config_t * configPtr){
     /* According to the datasheet */
     /* Warning: When switching between asynchronous and synchronous clocking of
@@ -758,29 +846,39 @@ void TIMER2_init(const timer2_config_t * configPtr){
     }
 }
 
-void TIMER0_setCallBack(void (*ptrToFunction)(void)){
-    timer0_callBackPtr = ptrToFunction;
+void TIMER2_setCallBack(void (*ptrToFunction)(void)){
+    timer2_callBackPtr = ptrToFunction;
 }
 
-
-void TIMER0_deInit(void){
-    TCCR0 = 0;
-    CLEAR_BIT(TIMSK, TOIE0);
-    CLEAR_BIT(TIMSK, OCIE0);
+void TIMER2_deInit(void){
+    TCCR2 = 0;
+    CLEAR_BIT(TIMSK, TOIE2);
+    CLEAR_BIT(TIMSK, OCIE2);
 }
 
-void TIMER0_start(const timer0_config_t * configPtr){
-    TCCR0 = (TCCR0 & 0xF8) | (configPtr->timer_prescaler);
+void TIMER2_start(const timer2_config_t * configPtr){
+    TCCR2 = (TCCR2 & 0xF8) | (configPtr->timer_prescaler);
 }
 
-void TIMER0_stop(void){
-    TCCR0 = (TCCR0 & 0xF8) | NO_CLOCK;
+void TIMER2_stop(void){
+    TCCR2 = (TCCR2 & 0xF8) | T2_NO_CLOCK;
 }
 
-void TIMER0_set_duty_cycle(uint8 duty){
-    OCR0 = duty;
+void TIMER2_set_duty_cycle(uint8 duty){
+    OCR2 = duty;
 }
 
+/*
+==============================================================================
+* 								 ISR Functions 
+==============================================================================
+*/
+
+/*
+==============================================================================
+* 								 TIMER 0 ISRs
+==============================================================================
+*/
 ISR(TIMER0_OVF_vect){
     numberOfTicks[TIMER0_INDEX]++;
     if(numberOfTicks[TIMER0_INDEX] == requiredNumOfTicks[TIMER0_INDEX]){
@@ -801,55 +899,11 @@ ISR(TIMER0_COMP_vect){
     }
 }
 
-void TIMER1_setCallBack(void (*ptrToFunction)(void)){
-    timer1_channelA_callBackPtr = ptrToFunction;
-}
-
-void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void)){
-    timer1_channelA_callBackPtr = ptrToFunction;
-}
-
-void TIMER1_channelB_setCallBack(void (*ptrToFunction)(void)){
-    timer1_channelB_callBackPtr = ptrToFunction;
-}
-
-void TIMER1_deInit(void){
-    /* Reset Counter Register */
-    TCNT1 = 0;
-    /* Reset Output Compare Registers */
-    OCR1A = 0;
-    OCR1B = 0;
-    /* Reset Timer Control Registers */
-    TCCR1A = 0;
-    TCCR1B = 0;
-    /* Disable Timer Interrupts */
-    CLEAR_BIT(TIMSK, TOIE1); /* Overflow Interrupt */
-    CLEAR_BIT(TIMSK, OCIE1A); /* Output Compare Interrupt for Channel A */
-    CLEAR_BIT(TIMSK, OCIE1B); /* Output Compare Interrupt  for Channel B */
-    CLEAR_BIT(TIMSK, TICIE1); /* Input Capture Interrupt */
-}
-
-void TIMER1_start(const timer1_config_t * configPtr){
-    TCCR1B = (TCCR1B & 0xF8) | (configPtr->timer_prescaler);
-}
-
-void TIMER1_stop(void){
-    TCCR1B = (TCCR1B & 0xF8) | NO_CLOCK;
-}
-
-void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber){
-    switch (channelNumber)
-    {
-    case CHANNEL_A:
-        OCR1A = duty;
-        break;
-    case CHANNEL_B:
-        OCR1B = duty;
-    default:
-        break;
-    }
-}
-
+/*
+==============================================================================
+* 								 TIMER 1 ISRs 
+==============================================================================
+*/
 ISR(TIMER1_OVF_vect){
     numberOfTicks[TIMER1_CHANNEL_A_INDEX]++;
     if(numberOfTicks[TIMER1_CHANNEL_A_INDEX] == requiredNumOfTicks[TIMER1_CHANNEL_A_INDEX]){
@@ -880,29 +934,11 @@ ISR(TIMER1_COMPB_vect){
     }
 }
 
-void TIMER2_setCallBack(void (*ptrToFunction)(void)){
-    timer2_callBackPtr = ptrToFunction;
-}
-
-
-void TIMER2_deInit(void){
-    TCCR2 = 0;
-    CLEAR_BIT(TIMSK, TOIE2);
-    CLEAR_BIT(TIMSK, OCIE2);
-}
-
-void TIMER2_start(const timer2_config_t * configPtr){
-    TCCR2 = (TCCR2 & 0xF8) | (configPtr->timer_prescaler);
-}
-
-void TIMER2_stop(void){
-    TCCR2 = (TCCR2 & 0xF8) | NO_CLOCK;
-}
-
-void TIMER2_set_duty_cycle(uint8 duty){
-    OCR2 = duty;
-}
-
+/*
+==============================================================================
+* 								 TIMER 2 ISRs 
+==============================================================================
+*/
 ISR(TIMER2_OVF_vect){
     numberOfTicks[TIMER2_INDEX]++;
     if(numberOfTicks[TIMER2_INDEX] == requiredNumOfTicks[TIMER2_INDEX]){

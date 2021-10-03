@@ -36,12 +36,23 @@
 ==============================================================================
 */
 
+/*
+==============================================================================
+* 								General Types
+==============================================================================
+*/
 typedef enum{
 	TIMER_NORMAL_MODE,
 	TIMER_CTC_MODE = 2,
 	TIMER_PWM_MODE,
 } timer_mode_t;
 
+
+/*
+==============================================================================
+* 								  TIMER 0
+==============================================================================
+*/
 typedef enum{
 	OC0_DISCONNECTED,
 	OC0_TOGGLE_ON_COMPARE_MATCH,
@@ -50,47 +61,15 @@ typedef enum{
 } OC0_pin_mode_t;
 
 typedef enum{
-	OC1_DISCONNECTED,
-	OC1_TOGGLE_ON_COMPARE_MATCH,
-	OC1_CLEAR_ON_COMPARE_MATCH,
-	OC1_SET_ON_COMPARE_MATCH,
-} OC1_pin_mode_t;
-
-typedef enum{
-	OC2_DISCONNECTED,
-	OC2_TOGGLE_ON_COMPARE_MATCH,
-	OC2_CLEAR_ON_COMPARE_MATCH,
-	OC2_SET_ON_COMPARE_MATCH,
-} OC2_pin_mode_t;
-
-/* maybe delete me */
-typedef enum{
-	PWM_NON_INVERTING_MODE,
-	PWM_INTERTING_MODE,
-} PWM_MODE_t;
-
-typedef enum{
-	NO_CLOCK,
-	F_CPU_1,
-	F_CPU_8,
-	F_CPU_64,
-	F_CPU_256,
-	F_CPU_1024,
-	EX_CLK_FALLING_EDGE,
-	EX_CLK_RISING_EDGE,
+	T0_NO_CLOCK,
+	T0_F_CPU_1,
+	T0_F_CPU_8,
+	T0_F_CPU_64,
+	T0_F_CPU_256,
+	T0_F_CPU_1024,
+	T0_EX_CLK_FALLING_EDGE,
+	T0_EX_CLK_RISING_EDGE,
 } timer0_prescaler_t;
-
-typedef enum{
-	NO_CLOCK,
-	F_CPU_1,
-	F_CPU_8,
-	F_CPU_32,
-	F_CPU_64,
-	F_CPU_128,
-	F_CPU_256,
-	F_CPU_1024,
-} timer2_prescaler_t;
-
 
 typedef struct{
 	timer_mode_t timerMode;
@@ -101,14 +80,38 @@ typedef struct{
 	uint8 ticks;
 } timer0_config_t;
 
+/*
+==============================================================================
+* 								  TIMER 1
+==============================================================================
+*/
+typedef enum{
+	T1_NO_CLOCK,
+	T1_F_CPU_1,
+	T1_F_CPU_8,
+	T1_F_CPU_64,
+	T1_F_CPU_256,
+	T1_F_CPU_1024,
+	T1_EX_CLK_FALLING_EDGE,
+	T1_EX_CLK_RISING_EDGE,
+} timer1_prescaler_t;
+
+typedef enum{
+	OC1_DISCONNECTED,
+	OC1_TOGGLE_ON_COMPARE_MATCH,
+	OC1_CLEAR_ON_COMPARE_MATCH,
+	OC1_SET_ON_COMPARE_MATCH,
+} OC1_pin_mode_t;
+
 typedef enum{
 	CHANNEL_A,
 	CHANNEL_B,
 } timer1_channel_number_t;
 
+
 typedef struct{
 	timer_mode_t timerMode;
-	timer0_prescaler_t timer_prescaler;
+	timer1_prescaler_t timer_prescaler;
 	uint16 timer_initialValue;
 	uint16 timer_compareValueA;
 	uint16 timer_compareValueB;
@@ -117,6 +120,29 @@ typedef struct{
 	uint8 channelA_ticks;
 	uint8 channelB_ticks;
 } timer1_config_t;
+
+/*
+==============================================================================
+* 								 TIMER 2
+==============================================================================
+*/
+typedef enum{
+	T2_NO_CLOCK,
+	T2_F_CPU_1,
+	T2_F_CPU_8,
+	T2_F_CPU_32,
+	T2_F_CPU_64,
+	T2_F_CPU_128,
+	T2_F_CPU_256,
+	T2_F_CPU_1024,
+} timer2_prescaler_t;
+
+typedef enum{
+	OC2_DISCONNECTED,
+	OC2_TOGGLE_ON_COMPARE_MATCH,
+	OC2_CLEAR_ON_COMPARE_MATCH,
+	OC2_SET_ON_COMPARE_MATCH,
+} OC2_pin_mode_t;
 
 typedef enum{
 	INTERNAL_CLOCK, /* AS2 = 0 */
@@ -140,6 +166,12 @@ typedef struct{
 * 							Function Prototypes
 ==============================================================================
 */
+
+/*
+==============================================================================
+* 								TIMER 0
+==============================================================================
+*/
 void TIMER0_init(const timer0_config_t * configPtr);
 void TIMER0_setCallBack(void (*ptrToFunction)(void));
 void TIMER0_stop(void);
@@ -147,6 +179,11 @@ void TIMER0_deInit(void);
 void TIMER0_start(const timer0_config_t * configPtr);
 void TIMER0_set_duty(uint8 duty);
 
+/*
+==============================================================================
+* 								TIMER 1
+==============================================================================
+*/
 void TIMER1_init(const timer1_config_t * configPtr);
 void TIMER1_setCallBack(void (*ptrToFunction)(void));
 void TIMER1_channelA_setCallBack(void (*ptrToFunction)(void));
@@ -156,7 +193,11 @@ void TIMER1_deInit(void);
 void TIMER1_start(const timer1_config_t * configPtr);
 void TIMER1_set_duty(uint16 duty, timer1_channel_number_t channelNumber);
 
-
+/*
+==============================================================================
+* 								TIMER 2
+==============================================================================
+*/
 void TIMER2_init(const timer2_config_t * configPtr);
 void TIMER2_setCallBack(void (*ptrToFunction)(void));
 void TIMER2_stop(void);
