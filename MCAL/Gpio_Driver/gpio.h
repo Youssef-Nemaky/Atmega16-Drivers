@@ -56,6 +56,17 @@ typedef enum{
 } GPIO_port_config_t;
 
 
+/*
+==============================================================================
+*                                Function Prototypes  
+==============================================================================
+*/
+
+/* Setup the direction of a specific pin to be output / input or input with internal
+ * pull-up resistor
+ * if the port/pin number is not correct, the request is not handled
+ */
+void GPIO_setPinDirection(GPIO_port_number_t, GPIO_pin_number_t, GPIO_pin_config_t);
 
 
 #endif /* GPIO_H_ */
