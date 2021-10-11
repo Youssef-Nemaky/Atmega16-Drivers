@@ -82,4 +82,9 @@ void GPIO_setPinDirection(GPIO_port_number_t, GPIO_pin_number_t, GPIO_pin_config
  */
 void GPIO_writePin(GPIO_port_number_t, GPIO_pin_number_t, uint8 pinValue);
 
+/* Read the logical value from a specific pin
+ * if the port/pin number is not correct, the function will return 0
+ */
+uint8 GPIO_readPin(GPIO_port_number_t, GPIO_pin_number_t);
+
 #endif /* GPIO_H_ */
