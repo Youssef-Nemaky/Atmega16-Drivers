@@ -78,3 +78,45 @@ void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNu
             break;
     }
 }
+
+
+/* Write the logical value into a specific pin if the port/pin number is not correct,
+ * the request is not handled
+ */
+void GPIO_writePin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, uint8 pinValue){
+    if((portNumber >= PORT_NUMS) || (pinNumber >= PINS_PER_PORT)){
+        /* There should be some sort of error handling */
+        /* Do Nothing */
+    } else {
+        switch (portNumber){
+        case PORTA_ID:
+            if(pinValue){
+                SET_BIT(PORTA, pinNumber);
+            } else {
+                CLEAR_BIT(PORTA, pinNumber);
+            }
+            break;
+        case PORTB_ID:
+            if(pinValue){
+                SET_BIT(PORTB, pinNumber);
+            } else {
+                CLEAR_BIT(PORTB, pinNumber);
+            }
+            break;
+        case PORTC_ID:
+            if(pinValue){
+                SET_BIT(PORTC, pinNumber);
+            } else {
+                CLEAR_BIT(PORTC, pinNumber);
+            }
+            break;
+        case PORTD_ID:
+            if(pinValue){
+                SET_BIT(PORTD, pinNumber);
+            } else {
+                CLEAR_BIT(PORTD, pinNumber);
+            }
+            break;
+        }
+    }
+}
