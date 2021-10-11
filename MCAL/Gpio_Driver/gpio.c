@@ -120,3 +120,28 @@ void GPIO_writePin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, u
         }
     }
 }
+
+
+/* Read the logical value from a specific pin
+ * if the port/pin number is not correct, the function will return logic LOW
+ */
+uint8 GPIO_readPin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber){
+    if((portNumber >= PORT_NUMS) || (pinNumber >= PINS_PER_PORT)){
+        return LOW;
+    } else {
+        switch (portNumber){
+        case PORTA_ID:
+            return bit_is_set(PORTA, pinNumber);
+            break;
+        case PORTB_ID:
+            return bit_is_set(PORTB, pinNumber);
+            break;
+        case PORTC_ID:
+            return bit_is_set(PORTC, pinNumber);
+            break;
+        case PORTD_ID:
+            return bit_is_set(PORTD, pinNumber);
+            break;
+        }
+    }
+}
