@@ -77,5 +77,9 @@ typedef enum{
  */
 void GPIO_setPinDirection(GPIO_port_number_t, GPIO_pin_number_t, GPIO_pin_config_t);
 
+/* Write the logical value into a specific pin if the port/pin number is not correct,
+ * the request is not handled
+ */
+void GPIO_writePin(GPIO_port_number_t, GPIO_pin_number_t, uint8 pinValue);
 
 #endif /* GPIO_H_ */
