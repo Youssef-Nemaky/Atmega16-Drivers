@@ -93,4 +93,9 @@ uint8 GPIO_readPin(GPIO_port_number_t, GPIO_pin_number_t);
  */
 void GPIO_setPortDirection(GPIO_port_number_t,GPIO_port_config_t);
 
+/* Write the logical value into a specific port if the port number is not correct,
+ * the request is not handled
+ */
+void GPIO_writePort(GPIO_port_number_t, uint8 portValue);
+
 #endif /* GPIO_H_ */
