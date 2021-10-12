@@ -87,4 +87,10 @@ void GPIO_writePin(GPIO_port_number_t, GPIO_pin_number_t, uint8 pinValue);
  */
 uint8 GPIO_readPin(GPIO_port_number_t, GPIO_pin_number_t);
 
+/* Setup the direction of a specific port(FULL port) to be output / input or input with internal
+ * pull-up resistor
+ * if the port number is not correct, the request is not handled
+ */
+void GPIO_setPortDirection(GPIO_port_number_t,GPIO_port_config_t);
+
 #endif /* GPIO_H_ */
