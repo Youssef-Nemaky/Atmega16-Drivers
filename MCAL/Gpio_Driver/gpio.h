@@ -98,4 +98,9 @@ void GPIO_setPortDirection(GPIO_port_number_t,GPIO_port_config_t);
  */
 void GPIO_writePort(GPIO_port_number_t, uint8 portValue);
 
+/* Read the logical value from a specific port
+ * if the port number is not correct, the function will return 0
+ */
+uint8 GPIO_readPort(GPIO_port_number_t);
+
 #endif /* GPIO_H_ */
