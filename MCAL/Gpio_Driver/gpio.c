@@ -251,7 +251,32 @@ void GPIO_writePort(GPIO_port_number_t portNumber, uint8 portValue){
     }
 }
 
-         
+
+/* Read the logical value from a specific port
+ * if the port number is not correct, the function will return 0
+ */
+uint8 GPIO_readPort(GPIO_port_number_t portNumber){
+    if(portNumber >= PORT_NUMS){
+        return LOW;
+    } else {
+        switch (portNumber)
+        {
+        case PORTA_ID:
+            return PORTA;
+            break;
+        
+        case PORTB_ID:
+            return PORTB;
+            break;
+        
+        case PORTC_ID:
+            return PORTC;
+            break;
+        
+        case PORTD_ID:
+            return PORTD;
+            break;
+            
         }
     }
 }
