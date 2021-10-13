@@ -40,4 +40,9 @@ typedef signed long long      sint64;
 typedef float                 float32;
 typedef double                float64;
 
+
+/* MAX & MIN Values */
+#define MAX_NUMBER_U8_BIT 0xFF
+#define MIN_NUMBER_U8_BIT 0x00
+
 #endif /* STD_TYPES_H_ */
