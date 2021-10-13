@@ -145,3 +145,77 @@ uint8 GPIO_readPin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber){
         }
     }
 }
+
+/* Setup the direction of a specific port(FULL port) to be output / input or input with internal
+ * pull-up resistor
+ * if the port number is not correct, the request is not handled
+ */
+void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinConfig){
+    if(portNumber >= PORT_NUMS){
+        /* There should be some sort of error handling */
+        /* Do Nothing */
+    } else {
+        switch (porNumber){
+        case PORTA_ID:
+            switch (pinConfig){
+            case PORT_OUTPUT:
+                DDRA = MAX_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT:
+                DDRA = MIN_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRA = MIN_NUMBER_U8_BIT;
+                PORTA = MAX_NUMBER_U8_BIT;
+                break;
+            }
+            break;
+
+        case PORTB_ID:
+            switch (pinConfig){
+            case PORT_OUTPUT:
+                DDRB = MAX_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT:
+                DDRB = MIN_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRB = MIN_NUMBER_U8_BIT;
+                PORTB = MAX_NUMBER_U8_BIT;
+                break;
+            }
+            break;
+
+        case PORTC_ID:
+            switch (pinConfig){
+            case PORT_OUTPUT:
+                DDRC = MAX_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT:
+                DDRC = MIN_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRC = MIN_NUMBER_U8_BIT;
+                PORTC = MAX_NUMBER_U8_BIT;
+                break;
+            }
+            break;
+
+        case PORTD_ID:
+            switch (pinConfig){
+            case PORT_OUTPUT:
+                DDRD = MAX_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT:
+                DDRD = MIN_NUMBER_U8_BIT;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRD = MIN_NUMBER_U8_BIT;
+                PORTD = MAX_NUMBER_U8_BIT;
+                break;
+            }
+            break;
+            
+        }
+    }
+}
