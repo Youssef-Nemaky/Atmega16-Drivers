@@ -219,3 +219,39 @@ void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinC
         }
     }
 }
+
+
+/* Write the logical value into a specific port if the port number is not correct,
+ * the request is not handled
+ */
+void GPIO_writePort(GPIO_port_number_t portNumber, uint8 portValue){
+    if(portNumber >= PORT_NUMS){
+        /* There should be some sort of error handling */
+        /* Do Nothing */
+    } else {
+        switch (portNumber)
+        {
+        case PORTA_ID:
+            PORTA = portValue;    
+            break;
+        
+        case PORTB_ID:
+            PORTB = portValue;    
+            break;
+
+        case PORTC_ID:
+            PORTC = portValue;    
+            break;
+
+        case PORTD_ID:
+            PORTD = portValue;    
+            break;
+
+        }
+    }
+}
+
+         
+        }
+    }
+}
