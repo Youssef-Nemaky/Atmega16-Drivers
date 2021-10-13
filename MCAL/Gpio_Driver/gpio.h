@@ -75,32 +75,32 @@ typedef enum{
  * pull-up resistor
  * if the port/pin number is not correct, the request is not handled
  */
-void GPIO_setPinDirection(GPIO_port_number_t, GPIO_pin_number_t, GPIO_pin_config_t);
+void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, GPIO_pin_config_t pinConfig);
 
 /* Write the logical value into a specific pin if the port/pin number is not correct,
  * the request is not handled
  */
-void GPIO_writePin(GPIO_port_number_t, GPIO_pin_number_t, uint8 pinValue);
+void GPIO_writePin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, uint8 pinValue);
 
 /* Read the logical value from a specific pin
  * if the port/pin number is not correct, the function will return 0
  */
-uint8 GPIO_readPin(GPIO_port_number_t, GPIO_pin_number_t);
+uint8 GPIO_readPin(GPIO_port_number_t porNumber, GPIO_pin_number_t pinNumber);
 
 /* Setup the direction of a specific port(FULL port) to be output / input or input with internal
  * pull-up resistor
  * if the port number is not correct, the request is not handled
  */
-void GPIO_setPortDirection(GPIO_port_number_t,GPIO_port_config_t);
+void GPIO_setPortDirection(GPIO_port_number_t portNumber, GPIO_port_config_t portConfig);
 
 /* Write the logical value into a specific port if the port number is not correct,
  * the request is not handled
  */
-void GPIO_writePort(GPIO_port_number_t, uint8 portValue);
+void GPIO_writePort(GPIO_port_number_t pornNumber, uint8 portValue);
 
 /* Read the logical value from a specific port
  * if the port number is not correct, the function will return 0
  */
-uint8 GPIO_readPort(GPIO_port_number_t);
+uint8 GPIO_readPort(GPIO_port_number_t portNumber);
 
 #endif /* GPIO_H_ */
