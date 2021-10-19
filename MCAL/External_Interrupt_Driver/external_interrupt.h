@@ -49,6 +49,13 @@ typedef enum {
 *                                   Function Prototypes
 ==============================================================================
 */
+
+/* Set up the required external interrupt mode and enable it
+ * Note: only rising and falling edge modes are avaliable for external interrupt 2
+ */
 void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t externalInterruptMode);
+
+/* Disable the required external interrupt by de-initing its registers */
 void EX_INT_disable(uint8 externalInterruptNumber);
+
 #endif /* EXTERNAL_INTERRUPT_H_ */
