@@ -5,6 +5,7 @@
 * Name: external_interrupt.c 
 ==============================================================================
 */
+
 #include "external_interrupt.h"
 #include "../Gpio_Driver/gpio.h"
 
@@ -73,4 +74,29 @@ void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t exte
     }
 }
 
+/* Disable the required external interrupt by de-initing its registers */
+void EX_INT_disable(uint8 externalInterruptNumber){
+    switch (externalInterruptNumber)
+    {
+    case EXTERNAL_INTERRUPT_0_ID:
+        /* reset interrupt sense control bits for external interrupt 0 */
+        MCUCR &= 0xFC;
+        /* Clear external interrupt request enable bit */
+        CLEAR_BIT(GICR, INT0);
+        break;
 
+    case EXTERNAL_INTERRUPT_1_ID:
+        /* reset interrupt sense control bits for external interrupt 1 */
+        MCUCR &= 0xF3;
+        /* Clear external interrupt request enable bit */
+        CLEAR_BIT(GICR, INT1);
+        break;
+    
+    case EXTERNAL_INTERRUPT_2_ID:
+        /* reset interrupt sense control bit for external interrupt 2 */
+        CLEAR_BIT(MCUCSR, ISC2);        
+        /* Clear external interrupt request enable bit */
+        CLEAR_BIT(GICR, INT2);
+        break;
+    }
+}
