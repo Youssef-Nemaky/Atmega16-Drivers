@@ -31,4 +31,16 @@
 #define EXTERNAL_INTERRUPT_1_ID 1
 #define EXTERNAL_INTERRUPT_2_ID 2
 
+/*
+==============================================================================
+*                                   TYPES
+==============================================================================
+*/
+typedef enum {
+  EXT_INT_LOW_LVL_TRIGGER,
+  EXT_INT_LVL_CHANGE_TRIGGER,
+  EXT_INT_FALLING_EDGE_TRIGGER,
+  EXT_INT_RISING_EDGE_TRIGGER,
+} external_interrupt_mode_t;
+
 #endif /* EXTERNAL_INTERRUPT_H_ */
