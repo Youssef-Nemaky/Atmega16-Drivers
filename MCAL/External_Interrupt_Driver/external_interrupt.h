@@ -21,5 +21,14 @@
 #include "../Important_Header_Files/std_types.h"
 #include "../Gpio_Driver/gpio.h"
 
+/*
+==============================================================================
+*                                   Definitions
+==============================================================================
+*/
+
+#define EXTERNAL_INTERRUPT_0_ID 0
+#define EXTERNAL_INTERRUPT_1_ID 1
+#define EXTERNAL_INTERRUPT_2_ID 2
 
 #endif /* EXTERNAL_INTERRUPT_H_ */
