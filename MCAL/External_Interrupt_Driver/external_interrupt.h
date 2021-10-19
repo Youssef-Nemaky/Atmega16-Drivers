@@ -43,4 +43,11 @@ typedef enum {
   EXT_INT_RISING_EDGE_TRIGGER,
 } external_interrupt_mode_t;
 
+/*
+==============================================================================
+*                                   Function Prototypes
+==============================================================================
+*/
+void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t externalInterruptMode);
+void EX_INT_disable(uint8 externalInterruptNumber);
 #endif /* EXTERNAL_INTERRUPT_H_ */
