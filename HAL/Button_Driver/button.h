@@ -18,5 +18,26 @@
 */
 #include "../MCAL/Gpio_Driver/gpio.h"
 
+/*
+==============================================================================
+*                                   TYPES
+==============================================================================
+*/
+typedef enum {
+	BUTTON_PULLUP_CONNECTION,
+	BUTTON_PULLDOWN_CONNECTION,
+} button_connection_t;
+
+typedef struct {
+	GPIO_port_number_t port_number;
+	GPIO_pin_number_t pin_number;
+	button_connection_t button_connection;
+	/* In case the target UC has internal resistor modes */
+	#ifdef INTERNAL_RESISTOR
+	GPIO_internal_resistor_t internal_resistor;
+	#endif
+} button_t;
+
+/*
 
 #endif /* BUTTON_H_ */
