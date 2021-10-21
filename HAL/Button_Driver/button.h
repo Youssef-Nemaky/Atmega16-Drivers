@@ -39,5 +39,14 @@ typedef struct {
 } button_t;
 
 /*
+==============================================================================
+*                                Function Prototypes  
+==============================================================================
+*/
+/* used to initialize all necessary sequence for button */
+void BUTTON_init(const button_t * buttonConfig);
+
+/* used to return the state of a button whether it's HIGHT OR LOW */
+uint8 BUTTON_getState(const button_t *);
 
 #endif /* BUTTON_H_ */
