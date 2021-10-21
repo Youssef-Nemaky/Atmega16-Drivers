@@ -27,7 +27,7 @@
 
 #define PORT_NUMS 4
 #define PINS_PER_PORT 8
-
+#define INTERNAL_RESISTOR 1
 /*
 ==============================================================================
 *                                   TYPES
@@ -64,6 +64,10 @@ typedef enum{
     PORT_INPUT_INTERNAL_PULLUP,
 } GPIO_port_config_t;
 
+typedef enum{
+    GPIO_INTERNAL_RESISTOR_DISABLED,
+    GPIO_INTERNAL_PULLUP_ENABLED,
+} GPIO_internal_resistor_t;
 
 /*
 ==============================================================================
