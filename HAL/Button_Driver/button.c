@@ -17,3 +17,28 @@ void BUTTON_init(const button_t * buttonConfig){
     }
 }
 
+
+/* used to return the state of a button whether it's HIGHT OR LOW */
+uint8 BUTTON_getState(const button_t * buttonConfig){
+    /* Always -HIGH for pressed
+     *        -LOW for not pressed 
+     */
+    if(buttonConfig->button_connection == BUTTON_PULLDOWN_CONNECTION){
+        /* When the button is pressed, the uc should read HIGH */
+        if(GPIO_readPin(buttonConfig->port_number, buttonConfig->pin_number)){
+            return HIGH;
+        } else {
+            /* the button is not pressed */
+            return LOW;
+        }
+    } else {
+        /* PULL-UP Configuration */
+        /* When the button is pressed, the uc should read LOW */
+        if(GPIO_readPin(buttonConfig->port_number, buttonConfig->pin_number) == 0){
+            return HIGH;
+        } else {
+            /* the button is not pressed */
+            return LOW;
+        }
+    }
+}
