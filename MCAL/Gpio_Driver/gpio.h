@@ -27,6 +27,7 @@
 
 #define PORT_NUMS 4
 #define PINS_PER_PORT 8
+#define HALFS_PER_PORT 2
 #define INTERNAL_RESISTOR 1
 /*
 ==============================================================================
@@ -61,13 +62,13 @@ typedef enum{
     PIN_OUTPUT,
     PIN_INPUT,
     PIN_INPUT_INTERNAL_PULLUP,
-} GPIO_pin_config_t;
+} GPIO_pin_mode_t;
 
 typedef enum{
     PORT_OUTPUT,
     PORT_INPUT,
     PORT_INPUT_INTERNAL_PULLUP,
-} GPIO_port_config_t;
+} GPIO_port_mode_t;
 
 typedef enum{
     GPIO_INTERNAL_RESISTOR_DISABLED,
@@ -84,7 +85,7 @@ typedef enum{
  * pull-up resistor
  * if the port/pin number is not correct, the request is not handled
  */
-void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, GPIO_pin_config_t pinConfig);
+void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, GPIO_pin_mode_t pinConfig);
 
 /* Write the logical value into a specific pin if the port/pin number is not correct,
  * the request is not handled
@@ -100,7 +101,7 @@ uint8 GPIO_readPin(GPIO_port_number_t porNumber, GPIO_pin_number_t pinNumber);
  * pull-up resistor
  * if the port number is not correct, the request is not handled
  */
-void GPIO_setPortDirection(GPIO_port_number_t portNumber, GPIO_port_config_t portConfig);
+void GPIO_setPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t portConfig);
 
 /* Write the logical value into a specific port if the port number is not correct,
  * the request is not handled
@@ -123,7 +124,7 @@ uint8 GPIO_readPort(GPIO_port_number_t portNumber);
  * pull-up resistor
  * if the port number is not correct, the request is not handled 
  */
-void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_config_t portConfig, GPIO_half_port_number_t portHalf);
+void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t portConfig, GPIO_half_port_number_t portHalf);
 
 /* Write the logical value into a specific port (HALF of the port) if the port number is not correct,
  * the request is not handled
