@@ -8,6 +8,12 @@
 
 #include "gpio.h"
 
+/*
+==============================================================================
+*                            PIN Related Functions  
+==============================================================================
+*/
+
 /* Setup the direction of a specific pin to be output / input or input with internal
  * pull-up resistor
  * if the port/pin number is not correct, the request is not handled
@@ -146,6 +152,11 @@ uint8 GPIO_readPin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber){
     }
 }
 
+/*
+==============================================================================
+*                            FULL-PORT Related Functions  
+==============================================================================
+*/
 /* Setup the direction of a specific port(FULL port) to be output / input or input with internal
  * pull-up resistor
  * if the port number is not correct, the request is not handled
