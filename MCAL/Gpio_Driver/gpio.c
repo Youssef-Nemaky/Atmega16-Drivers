@@ -373,3 +373,61 @@ void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t p
     }
 }
 
+/* Write the logical value into a specific port (HALF of the port) if the port number is not correct,
+ * the request is not handled
+ */
+void GPIO_writeHalfPort(GPIO_port_number_t portNumber, uint8 portValue, GPIO_half_port_number_t portHalf){
+    if((portNumber >= PORT_NUMS) || (portHalf >= HALFS_PER_PORT)){
+        /* Some sort of error handling */
+        /* Do Nothing! */
+    } else {
+        switch (portNumber)
+        {
+        case PORTA_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                PORTA = (PORTA & 0xF0) | (portValue & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                PORTA = (PORTA & 0x0F) | ( (portValue & 0x0F)<<4 );
+                break;
+            }
+            break;
+        case PORTB_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                PORTB = (PORTB & 0xF0) | (portValue & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                PORTB = (PORTB & 0x0F) | ( (portValue & 0x0F)<<4 );
+                break;
+            }
+            break;
+        case PORTC_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                PORTC = (PORTC & 0xF0) | (portValue & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                PORTC = (PORTC & 0x0F) | ( (portValue & 0x0F)<<4 );
+                break;
+            }
+            break;
+        case PORTD_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                PORTD = (PORTD & 0xF0) | (portValue & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                PORTD = (PORTD & 0x0F) | ( (portValue & 0x0F)<<4 );
+                break;
+            }
+            break;
+        }
+    }
+}
+
