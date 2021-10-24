@@ -35,6 +35,11 @@
 */
 
 typedef enum{
+    GPIO_FIRST_HALF,
+    GPIO_SECOND_HALF,
+} GPIO_half_port_number_t;
+
+typedef enum{
     PORTA_ID, 
     PORTB_ID,
     PORTC_ID,
