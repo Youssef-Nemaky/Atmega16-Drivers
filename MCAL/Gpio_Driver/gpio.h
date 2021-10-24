@@ -146,7 +146,7 @@ void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t p
 /* Write the logical value into a specific port (HALF of the port) if the port number is not correct,
  * the request is not handled
  */
-void GPIO_writeHalfPort(GPIO_port_number_t pornNumber, uint8 portValue, GPIO_half_port_number_t portHalf);
+void GPIO_writeHalfPort(GPIO_port_number_t portNumber, uint8 portValue, GPIO_half_port_number_t portHalf);
 
 /* Read the logical value from a specific port(HALF port)
  * if the port number is not correct, the function will return 0
