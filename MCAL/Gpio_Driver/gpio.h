@@ -81,6 +81,12 @@ typedef enum{
 ==============================================================================
 */
 
+/*
+==============================================================================
+*                                PIN Related Functions  
+==============================================================================
+*/
+
 /* Setup the direction of a specific pin to be output / input or input with internal
  * pull-up resistor
  * if the port/pin number is not correct, the request is not handled
@@ -96,6 +102,12 @@ void GPIO_writePin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, u
  * if the port/pin number is not correct, the function will return 0
  */
 uint8 GPIO_readPin(GPIO_port_number_t porNumber, GPIO_pin_number_t pinNumber);
+
+/*
+==============================================================================
+*                            FULL-PORT Related Functions  
+==============================================================================
+*/
 
 /* Setup the direction of a specific port(FULL port) to be output / input or input with internal
  * pull-up resistor
@@ -113,6 +125,11 @@ void GPIO_writePort(GPIO_port_number_t pornNumber, uint8 portValue);
  */
 uint8 GPIO_readPort(GPIO_port_number_t portNumber);
 
+/*
+==============================================================================
+*                            HALF-PORT Related Functions  
+==============================================================================
+*/
 /* HALF PORT NOTICE: 
  * in ATMega16 the port consists of 8 pins meaning that half of the port is 4 pins. 
  * The first 4 pins could be distinguished by first half and the second 4 pins could
