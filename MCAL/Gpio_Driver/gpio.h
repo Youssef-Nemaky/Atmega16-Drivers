@@ -112,4 +112,28 @@ void GPIO_writePort(GPIO_port_number_t pornNumber, uint8 portValue);
  */
 uint8 GPIO_readPort(GPIO_port_number_t portNumber);
 
+/* HALF PORT NOTICE: 
+ * in ATMega16 the port consists of 8 pins meaning that half of the port is 4 pins. 
+ * The first 4 pins could be distinguished by first half and the second 4 pins could
+ * be distinguished by second half.
+ */
+
+
+/* Setup the direction of a specific port(HALF port) to be output / input or input with internal
+ * pull-up resistor
+ * if the port number is not correct, the request is not handled 
+ */
+void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_config_t portConfig, GPIO_half_port_number_t portHalf);
+
+/* Write the logical value into a specific port (HALF of the port) if the port number is not correct,
+ * the request is not handled
+ */
+void GPIO_writeHalfPort(GPIO_port_number_t pornNumber, uint8 portValue, GPIO_half_port_number_t portHalf);
+
+/* Read the logical value from a specific port(HALF port)
+ * if the port number is not correct, the function will return 0
+ */
+uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t portHalf);
+
+
 #endif /* GPIO_H_ */
