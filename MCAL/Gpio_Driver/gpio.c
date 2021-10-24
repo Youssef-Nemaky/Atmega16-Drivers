@@ -12,7 +12,7 @@
  * pull-up resistor
  * if the port/pin number is not correct, the request is not handled
  */
-void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, GPIO_pin_config_t pinConfig){
+void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber, GPIO_pin_mode_t pinMode){
     /* Check for valid port/pin number */
     if((portNumber >= PORT_NUMS) || (pinNumber >= PINS_PER_PORT)){
         /* There should be some sort of error handling */
@@ -21,7 +21,7 @@ void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNu
         switch (portNumber)
         {
         case PORTA_ID:
-            switch (pinConfig)
+            switch (pinMode)
             {
             case PIN_OUTPUT:
                 CLEAR_BIT(DDRA, pinNumber);
@@ -35,7 +35,7 @@ void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNu
             }
             break;
         case PORTB_ID:
-            switch (pinConfig)
+            switch (pinMode)
             {
             case PIN_OUTPUT:
                 CLEAR_BIT(DDRB, pinNumber);
@@ -49,7 +49,7 @@ void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNu
             }
             break;
         case PORTC_ID:
-            switch (pinConfig)
+            switch (pinMode)
             {
             case PIN_OUTPUT:
                 CLEAR_BIT(DDRC, pinNumber);
@@ -63,7 +63,7 @@ void GPIO_setPinDirection(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNu
             }
             break;
         case PORTD_ID:
-            switch (pinConfig)
+            switch (pinMode)
             {
             case PIN_OUTPUT:
                 CLEAR_BIT(DDRD, pinNumber);
@@ -150,14 +150,14 @@ uint8 GPIO_readPin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber){
  * pull-up resistor
  * if the port number is not correct, the request is not handled
  */
-void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinConfig){
+void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_mode_t portMode){
     if(portNumber >= PORT_NUMS){
         /* There should be some sort of error handling */
         /* Do Nothing */
     } else {
         switch (porNumber){
         case PORTA_ID:
-            switch (pinConfig){
+            switch (portMode){
             case PORT_OUTPUT:
                 DDRA = MAX_NUMBER_U8_BIT;
                 break;
@@ -172,7 +172,7 @@ void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinC
             break;
 
         case PORTB_ID:
-            switch (pinConfig){
+            switch (portMode){
             case PORT_OUTPUT:
                 DDRB = MAX_NUMBER_U8_BIT;
                 break;
@@ -187,7 +187,7 @@ void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinC
             break;
 
         case PORTC_ID:
-            switch (pinConfig){
+            switch (portMode){
             case PORT_OUTPUT:
                 DDRC = MAX_NUMBER_U8_BIT;
                 break;
@@ -202,7 +202,7 @@ void GPIO_setPortDirection(GPIO_port_number_t portNumber,GPIO_port_config_t pinC
             break;
 
         case PORTD_ID:
-            switch (pinConfig){
+            switch (portMode){
             case PORT_OUTPUT:
                 DDRD = MAX_NUMBER_U8_BIT;
                 break;
