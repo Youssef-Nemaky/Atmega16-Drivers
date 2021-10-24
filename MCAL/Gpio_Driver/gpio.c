@@ -431,3 +431,59 @@ void GPIO_writeHalfPort(GPIO_port_number_t portNumber, uint8 portValue, GPIO_hal
     }
 }
 
+/* Read the logical value from a specific port(HALF port)
+ * if the port number is not correct, the function will return 0
+ */
+uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t portHalf){
+    if(portNumber >= PORT_NUMS) || (portHalf >= HALFS_PER_PORT)){
+        return LOW;
+    } else {
+        switch (portNumber)
+        {
+        case PORTA_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                return (PORTA & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                return ((PORTA & 0xF0)>>4);
+                break;
+            }
+            break;
+        case PORTB_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                return (PORTB & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                return ((PORTB & 0xF0)>>4);
+                break;
+            }
+            break;
+        case PORTC_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                return (PORTC & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                return ((PORTC & 0xF0)>>4);
+                break;
+            }
+            break;
+        case PORTD_ID:
+            switch (portHalf)
+            {
+            case GPIO_FIRST_HALF:
+                return (PORTD & 0x0F);
+                break;
+            case GPIO_SECOND_HALF:
+                return ((PORTD & 0xF0)>>4);
+                break;
+            }
+            break;
+        }
+    }
+}
