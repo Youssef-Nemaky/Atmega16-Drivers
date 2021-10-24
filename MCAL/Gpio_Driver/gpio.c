@@ -291,3 +291,85 @@ uint8 GPIO_readPort(GPIO_port_number_t portNumber){
         }
     }
 }
+
+
+/*
+==============================================================================
+*                           HALF-PORT Related Functions  
+==============================================================================
+*/
+
+/* Setup the direction of a specific port(HALF port) to be output / input or input with internal
+ * pull-up resistor
+ * if the port number is not correct, the request is not handled 
+ */
+void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t portMode, GPIO_half_port_number_t portHalf){
+    if( (portNumber >= PORT_NUMS) || (portHalf >= HALFS_PER_PORT) ){
+        /* Some sort of error handling */
+        /* Do Nothing! */
+    } else {
+        switch (portNumber){
+        case PORTA_ID:
+            switch (portMode)
+            {
+            case PORT_OUTPUT:
+                DDRA |= 0x0F;
+                break;
+            case PORT_INPUT:
+                DDRA &= 0xF0;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRA &= 0xF0;
+                PORTA |= 0x0F;
+                break;
+            }
+            break;
+        case PORTB_ID:
+            switch (portMode)
+            {
+            case PORT_OUTPUT:
+                DDRB |= 0x0F;
+                break;
+            case PORT_INPUT:
+                DDRB &= 0xF0;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRB &= 0xF0;
+                PORTB |= 0x0F;
+                break;
+            }
+            break;
+        case PORTC_ID:
+            switch (portMode)
+            {
+            case PORT_OUTPUT:
+                DDRC |= 0x0F;
+                break;
+            case PORT_INPUT:
+                DDRC &= 0xF0;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRC &= 0xF0;
+                PORTC |= 0x0F;
+                break;
+            }
+            break;
+        case PORTD_ID:
+            switch (portMode)
+            {
+            case PORT_OUTPUT:
+                DDRD |= 0x0F;
+                break;
+            case PORT_INPUT:
+                DDRD &= 0xF0;
+                break;
+            case PORT_INPUT_INTERNAL_PULLUP:
+                DDRD &= 0xF0;
+                PORTD |= 0x0F;
+                break;
+            }
+            break;
+        }
+    }
+}
+
