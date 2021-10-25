@@ -4,6 +4,7 @@
         "common_macros.h": "c",
         "std_types.h": "c",
         "external_interrupt.h": "c",
-        "button.h": "c"
+        "button.h": "c",
+        "seven_segment.h": "c"
     }
 }
