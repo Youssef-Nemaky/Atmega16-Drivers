@@ -20,17 +20,13 @@
 #include "../Important_Header_Files/common_macros.h"
 #include "../Important_Header_Files/std_types.h"
 #include "../Gpio_Driver/gpio.h"
-
 /*
 ==============================================================================
 *                                   Definitions
 ==============================================================================
 */
 
-#define EXTERNAL_INTERRUPT_0_ID 0
-#define EXTERNAL_INTERRUPT_1_ID 1
-#define EXTERNAL_INTERRUPT_2_ID 2
-
+#define EXTERNAL_INTERRUPTS_NUMS 3
 /*
 ==============================================================================
 *                                   TYPES
@@ -44,6 +40,12 @@ typedef enum {
   EXT_INT_FALLING_EDGE_TRIGGER_INTERNAL_PULL_UP,
 } external_interrupt_mode_t;
 
+typedef enum {
+  EXTERNAL_INTERRUPT_0_ID,
+  EXTERNAL_INTERRUPT_1_ID,
+  EXTERNAL_INTERRUPT_2_ID,
+} external_interrupt_number_t;
+
 /*
 ==============================================================================
 *                                   Function Prototypes
@@ -53,9 +55,11 @@ typedef enum {
 /* Set up the required external interrupt mode and enable it
  * Note: only rising and falling edge modes are avaliable for external interrupt 2
  */
-void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t externalInterruptMode);
+void EX_INT_enable(external_interrupt_number_t externalInterruptNumber, external_interrupt_mode_t externalInterruptMode);
 
 /* Disable the required external interrupt by de-initing its registers */
-void EX_INT_disable(uint8 externalInterruptNumber);
+void EX_INT_disable(external_interrupt_number_t externalInterruptNumber);
 
+/* Set the call back function that will be called when the interrupt is handled */
+void EX_INT_setCallBack(void (*callBackPtr)(void), external_interrupt_number_t ex_interrupt_num);
 #endif /* EXTERNAL_INTERRUPT_H_ */
