@@ -33,5 +33,5 @@ void SEVENSEGMENT_init(const SEVENSEGMENT_config_t * configPtr){
  * seven segment uses 4 pins -> 4 bits -> max value: 2^4 - 1 = 0xF (15) 
  */
 void SEVENSEGMENT_displayNumber(const SEVENSEGMENT_config_t * configPtr, uint8 numToDisplay){
-    GPIO_writeHalfPort(configPtr->portNumber, numToDisplay);
+    GPIO_writeHalfPort(configPtr->portNumber, numToDisplay, configPtr->portHalf);
 }
