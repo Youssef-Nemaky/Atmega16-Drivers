@@ -144,3 +144,30 @@ void EX_INT_setCallBack(void (*callBackPtr)(void), external_interrupt_number_t e
         }
     }
 }
+
+/*
+==============================================================================
+*                             External Interrupts ISRs
+==============================================================================
+*/
+
+/* External Interrupt 0 ISR */
+ISR(INT0_vect){
+    if(g_ext_int_0_callBackPtr != NULL_PTR){
+        (*g_ext_int_0_callBackPtr)();
+    }
+}
+
+/* External Interrupt 1 ISR */
+ISR(INT1_vect){
+    if(g_ext_int_1_callBackPtr != NULL_PTR){
+        (*g_ext_int_1_callBackPtr)();
+    }
+}
+
+/* External Interrupt 2 ISR */
+ISR(INT2_vect){
+    if(g_ext_int_2_callBackPtr != NULL_PTR){
+        (*g_ext_int_2_callBackPtr)();
+    }
+}
