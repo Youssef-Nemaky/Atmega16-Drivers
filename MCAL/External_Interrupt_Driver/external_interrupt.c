@@ -9,6 +9,21 @@
 #include "external_interrupt.h"
 #include "../Gpio_Driver/gpio.h"
 
+/*
+==============================================================================
+*                                  Callback Pointers
+==============================================================================
+*/
+/* External Interrupt 0 callback pointer */
+static void (*g_ext_int_0_callBackPtr)(void) = NULL_PTR;
+
+/* External Interrupt 1 callback pointer */
+static void (*g_ext_int_1_callBackPtr)(void) = NULL_PTR;
+
+/* External Interrupt 2 callback pointer */
+static void (*g_ext_int_2_callBackPtr)(void) = NULL_PTR;
+
+
 /* Set up the required external interrupt mode and enable it
  * Note: only rising and falling edge modes are avaliable for external interrupt 2
  */
@@ -107,5 +122,25 @@ void EX_INT_disable(external_interrupt_number_t externalInterruptNumber){
         /* Clear external interrupt request enable bit */
         CLEAR_BIT(GICR, INT2);
         break;
+    }
+}
+
+void EX_INT_setCallBack(void (*callBackPtr)(void), external_interrupt_number_t ex_interrupt_num){
+    if(ex_interrupt_num >= EXTERNAL_INTERRUPTS_NUMS){
+        /* Some sort of error handling */
+        /* Do Nothing! */
+    } else {
+        switch (ex_interrupt_num)
+        {
+        case EXTERNAL_INTERRUPT_0_ID:
+            g_ext_int_0_callBackPtr = callBackPtr;
+            break;
+        case EXTERNAL_INTERRUPT_1_ID:
+            g_ext_int_1_callBackPtr = callBackPtr;
+            break;
+        case EXTERNAL_INTERRUPT_2_ID:
+            g_ext_int_2_callBackPtr = callBackPtr;
+            break;
+        }
     }
 }
