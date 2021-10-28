@@ -36,7 +36,7 @@ typedef struct {
 	#ifdef INTERNAL_RESISTOR
 	GPIO_internal_resistor_t internal_resistor;
 	#endif
-} button_t;
+} button_config_t;
 
 /*
 ==============================================================================
@@ -44,9 +44,9 @@ typedef struct {
 ==============================================================================
 */
 /* used to initialize all necessary sequence for button */
-void BUTTON_init(const button_t * buttonConfig);
+void BUTTON_init(const button_config_t * buttonConfig);
 
 /* used to return the state of a button whether it's HIGHT OR LOW */
-uint8 BUTTON_getState(const button_t *);
+uint8 BUTTON_getState(const button_config_t *);
 
 #endif /* BUTTON_H_ */
