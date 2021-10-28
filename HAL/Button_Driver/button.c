@@ -9,7 +9,7 @@
 #include "button.h"
 
 /* used to initialize all necessary sequence for button */
-void BUTTON_init(const button_t * buttonConfig){
+void BUTTON_init(const button_config_t * buttonConfig){
     if(buttonConfig->internal_resistor != GPIO_INTERNAL_RESISTOR_DISABLED){
         GPIO_setPinDirection(buttonConfig->port_number, buttonConfig->pin_number, PIN_INPUT_INTERNAL_PULLUP);
     } else {
@@ -19,7 +19,7 @@ void BUTTON_init(const button_t * buttonConfig){
 
 
 /* used to return the state of a button whether it's HIGHT OR LOW */
-uint8 BUTTON_getState(const button_t * buttonConfig){
+uint8 BUTTON_getState(const button_config_t * buttonConfig){
     /* Always -HIGH for pressed
      *        -LOW for not pressed 
      */
