@@ -12,7 +12,7 @@
 /* Set up the required external interrupt mode and enable it
  * Note: only rising and falling edge modes are avaliable for external interrupt 2
  */
-void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t externalInterruptMode){
+void EX_INT_enable(external_interrupt_number_t externalInterruptNumber, external_interrupt_mode_t externalInterruptMode){
     switch (externalInterruptNumber)
     {
     case EXTERNAL_INTERRUPT_0_ID:
@@ -52,30 +52,39 @@ void EX_INT_enable(uint8 externalInterruptNumber, external_interrupt_mode_t exte
     case EXTERNAL_INTERRUPT_2_ID:
         /* Error Checking */
         /* Only valid options for external interrupt 2 are: rising and falling edge level triggers */
-        assert( (externalInterruptMode != EXT_INT_FALLING_EDGE_TRIGGER) && (externalInterruptMode != EXT_INT_RISING_EDGE_TRIGGER) && 
-        (externalInterruptMode != EXT_INT_FALLING_EDGE_TRIGGER_INTERNAL_PULL_UP));
-
-        /* Check if internal pull up is enabled or not */
-        if(externalInterruptMode == EXT_INT_FALLING_EDGE_TRIGGER_INTERNAL_PULL_UP){
-            /* Make interrupt pin input with internal pull up resistor enabled */
-            GPIO_setPinDirection(PORTB_ID, PIN2_ID, PIN_INPUT_INTERNAL_PULLUP);
-            /* reset it to normal falling mode after setting the pin direction */
-            externalInterruptMode = EXT_INT_FALLING_EDGE_TRIGGER;
-        } else {
-            /* Make interrupt pin input */
-            GPIO_setPinDirection(PORTB_ID, PIN2_ID, PIN_INPUT);
+        if ((externalInterruptMode == EXT_INT_LVL_CHANGE_TRIGGER) || (externalInterruptMode == EXT_INT_LOW_LVL_TRIGGER)){
+            /* Some sort of error handling */
+            /* Do Nothing! */
         }
+        else {
+            /* Check if internal pull up is enabled or not */
+            if (externalInterruptMode == EXT_INT_FALLING_EDGE_TRIGGER_INTERNAL_PULL_UP){
+                /* Make interrupt pin input with internal pull up resistor enabled */
+                GPIO_setPinDirection(PORTB_ID, PIN2_ID, PIN_INPUT_INTERNAL_PULLUP);
+                /* reset it to normal falling mode after setting the pin direction */
+                externalInterruptMode = EXT_INT_FALLING_EDGE_TRIGGER;
+            }
+            else{
+                /* Make interrupt pin input */
+                GPIO_setPinDirection(PORTB_ID, PIN2_ID, PIN_INPUT);
+            }
 
-        /* Set the working mode for the external interrupt 2 */
-        MCUCSR = (MCUCSR & 0xBF) | (externalInterruptMode << 6);
-        /* Enable external interrupt 2 request */
-        SET_BIT(GICR, INT2);
+            /* Set the working mode for the external interrupt 2 */
+            if (externalInterruptMode == EXT_INT_FALLING_EDGE_TRIGGER){
+                CLEAR_BIT(MCUCSR, ISC2);
+            }
+            else{
+                SET_BIT(MCUCSR, ISC2);
+            }
+            /* Enable external interrupt 2 request */
+            SET_BIT(GICR, INT2);
+        }
         break;
     }
 }
 
 /* Disable the required external interrupt by de-initing its registers */
-void EX_INT_disable(uint8 externalInterruptNumber){
+void EX_INT_disable(external_interrupt_number_t externalInterruptNumber){
     switch (externalInterruptNumber)
     {
     case EXTERNAL_INTERRUPT_0_ID:
