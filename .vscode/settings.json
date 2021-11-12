@@ -5,6 +5,8 @@
         "std_types.h": "c",
         "external_interrupt.h": "c",
         "button.h": "c",
-        "seven_segment.h": "c"
+        "seven_segment.h": "c",
+        "keypad.h": "c",
+        "gpio.h": "c"
     }
 }
