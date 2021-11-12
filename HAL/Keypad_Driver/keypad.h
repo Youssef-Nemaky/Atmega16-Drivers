@@ -16,8 +16,13 @@
 *                              Definitions
 ==============================================================================
 */
+/* Number of Columns */
 #define N_COLUMNS 4
+/* Number of Rows */
 #define N_ROWS  4
+
+/* Keypad Port ID */
+#define KEYPAD_PORT PORTA_ID
 
 /*
 ==============================================================================
