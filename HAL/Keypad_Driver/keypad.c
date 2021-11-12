@@ -10,6 +10,17 @@
 
 /*
 ==============================================================================
+*                                Static Function Prototypes  
+==============================================================================
+*/
+#ifdef (N_COLUMNS == 3)
+static uint8 KEYPAD_4x3_adjustSwitchNumber(uint8 a_switchNumber);
+#elif  (N_COLUMNS == 4)
+static uint8 KEYPAD_4x4_adjustSwitchNumber(uint8 a_switchNumber);
+#endif
+
+/*
+==============================================================================
 * [Function Name]: KEYPAD_getPressedKey
 * [Description]: Used to check which key is pressed on the keypad and return it
 * [Args]:
