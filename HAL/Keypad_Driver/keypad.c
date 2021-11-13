@@ -41,7 +41,7 @@ uint8 KEYPAD_getPressedKey(void){
             for(rowsCounter = 0; rowsCounter < N_ROWS; rowsCounter++){
                 if(GPIO_readPin(KEYPAD_PORT, rowsCounter) == 0){
                     #if (N_COLUMNS == 4)
-                    return KEYPAD_4x4_adjustSwitchNumber((rowsCounter * N_ROWS) + (columnsCounter + 1));
+                    return KEYPAD_4x4_adjustSwitchNumber((rowsCounter * N_COLUMNS) + (columnsCounter + 1));
                     #elif (N_COLUMNS == 3)
                     GPIO_setPinDirection(PORTB_ID, 0, PIN_OUTPUT);
                     PORTB |= (1<<0);
