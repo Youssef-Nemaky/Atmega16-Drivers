@@ -64,6 +64,32 @@ static uint8 KEYPAD_4x3_adjustSwitchNumber(uint8 a_switchNumber){
     return pressedKey;
 }
 #elif  (N_COLUMNS == 4)
+#if (PROTEUS_KEYPAD == TRUE)
+static uint8 KEYPAD_4x4_adjustSwitchNumber(uint8 a_switchNumber){
+    uint8 pressedKey;
+    switch (a_switchNumber){
+    case 1:   pressedKey = 7;                break;
+    case 2:   pressedKey = 8;                break;
+    case 3:   pressedKey = 9;                break;
+    case 4:   pressedKey = '/';              break;
+    case 5:   pressedKey = 4;                break;            
+    case 6:   pressedKey = 5;                break;
+    case 7:   pressedKey = 6;                break;
+    case 8:   pressedKey = 'x';              break;
+    case 9:   pressedKey = 1;                break;
+    case 10:  pressedKey = 2;                break;
+    case 11:  pressedKey = 3;                break;
+    case 12:  pressedKey = '-';              break;
+    case 13:  pressedKey = 'c';              break;
+    case 14:  pressedKey = 0;                break;
+    case 15:  pressedKey = '=';              break;
+    case 16:  pressedKey = '+';              break;
+    }
+    return pressedKey;
+}
+#endif
+
+#else
 static uint8 KEYPAD_4x4_adjustSwitchNumber(uint8 a_switchNumber){
     uint8 pressedKey;
     switch (a_switchNumber){
