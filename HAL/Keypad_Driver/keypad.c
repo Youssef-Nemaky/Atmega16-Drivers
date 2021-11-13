@@ -13,7 +13,7 @@
 *                                Static Function Prototypes  
 ==============================================================================
 */
-#ifdef (N_COLUMNS == 3)
+#if (N_COLUMNS == 3)
 static uint8 KEYPAD_4x3_adjustSwitchNumber(uint8 a_switchNumber);
 #elif  (N_COLUMNS == 4)
 static uint8 KEYPAD_4x4_adjustSwitchNumber(uint8 a_switchNumber);
@@ -52,7 +52,7 @@ uint8 KEYPAD_getPressedKey(void){
 }
 
 
-#ifdef (N_COLUMNS == 3)
+#if (N_COLUMNS == 3)
 static uint8 KEYPAD_4x3_adjustSwitchNumber(uint8 a_switchNumber){
     uint8 pressedKey;
     switch (a_switchNumber){
