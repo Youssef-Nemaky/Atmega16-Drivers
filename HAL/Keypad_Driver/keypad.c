@@ -39,12 +39,10 @@ uint8 KEYPAD_getPressedKey(void){
             GPIO_setPortDirection(KEYPAD_PORT, PORT_INPUT);
             GPIO_setPinDirection(KEYPAD_PORT, columnsCounter + N_ROWS, PIN_OUTPUT);
             for(rowsCounter = 0; rowsCounter < N_ROWS; rowsCounter++){
-                if(GPIO_readPin(KEYPAD_PORT, rowsCounter) == 0){
+                if(!GPIO_readPin(KEYPAD_PORT, rowsCounter)){
                     #if (N_COLUMNS == 4)
                     return KEYPAD_4x4_adjustSwitchNumber((rowsCounter * N_COLUMNS) + (columnsCounter + 1));
                     #elif (N_COLUMNS == 3)
-                    GPIO_setPinDirection(PORTB_ID, 0, PIN_OUTPUT);
-                    PORTB |= (1<<0);
                     return KEYPAD_4x3_adjustSwitchNumber((rowsCounter * N_COLUMNS) + (columnsCounter + 1));
                     #endif
                 }
@@ -84,5 +82,6 @@ static uint8 KEYPAD_4x4_adjustSwitchNumber(uint8 a_switchNumber){
     case 16:  pressedKey = 'D';              break;
     default: pressedKey = a_switchNumber;    break;
     }
+    return pressedKey;
 }
 #endif
