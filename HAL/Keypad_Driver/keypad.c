@@ -35,15 +35,17 @@ uint8 KEYPAD_getPressedKey(void){
     /* loop until you find a pressed key */
     while(1){
         for(columnsCounter = 0; columnsCounter < N_COLUMNS; columnsCounter++){
-            GPIO_setPortDirection(KEYPAD_PORT, PORT_INPUT);
-            GPIO_setPinDirection(KEYPAD_PORT, columnsCounter, PIN_OUTPUT);
             GPIO_writePort(KEYPAD_PORT, 0x0F);
+            GPIO_setPortDirection(KEYPAD_PORT, PORT_INPUT);
+            GPIO_setPinDirection(KEYPAD_PORT, columnsCounter + N_ROWS, PIN_OUTPUT);
             for(rowsCounter = 0; rowsCounter < N_ROWS; rowsCounter++){
-                if(!GPIO_readPin(KEYPAD_PORT, rowsCounter)){
+                if(GPIO_readPin(KEYPAD_PORT, rowsCounter) == 0){
                     #if (N_COLUMNS == 4)
                     return KEYPAD_4x4_adjustSwitchNumber((rowsCounter * N_ROWS) + (columnsCounter + 1));
                     #elif (N_COLUMNS == 3)
-                    return KEYPAD_4x3_adjustSwitchNumber((rowsCounter * N_ROWS) + (columnsCounter + 1));;
+                    GPIO_setPinDirection(PORTB_ID, 0, PIN_OUTPUT);
+                    PORTB |= (1<<0);
+                    return KEYPAD_4x3_adjustSwitchNumber((rowsCounter * N_COLUMNS) + (columnsCounter + 1));
                     #endif
                 }
             }
