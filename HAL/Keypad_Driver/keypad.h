@@ -21,6 +21,13 @@
 /* Number of Rows */
 #define N_ROWS  4
 
+/* Use proteus 4x4 keypad or normal 4x4 keypad */
+#if (N_COLUMNS == 4)
+
+#define PROTEUS_KEYPAD TRUE /* TRUE OR FALSE VALUE */
+
+#endif
+
 /* Keypad Port ID */
 #define KEYPAD_PORT PORTA_ID
 
