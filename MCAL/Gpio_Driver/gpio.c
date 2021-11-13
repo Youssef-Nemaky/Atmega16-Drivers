@@ -142,16 +142,16 @@ uint8 GPIO_readPin(GPIO_port_number_t portNumber, GPIO_pin_number_t pinNumber){
     } else {
         switch (portNumber){
         case PORTA_ID:
-            return bit_is_set(PORTA, pinNumber);
+            return IS_BIT_SET(PINA, pinNumber);
             break;
         case PORTB_ID:
-            return bit_is_set(PORTB, pinNumber);
+            return IS_BIT_SET(PINB, pinNumber);
             break;
         case PORTC_ID:
-            return bit_is_set(PORTC, pinNumber);
+            return IS_BIT_SET(PINC, pinNumber);
             break;
         case PORTD_ID:
-            return bit_is_set(PORTD, pinNumber);
+            return IS_BIT_SET(PIND, pinNumber);
             break;
         }
     }
@@ -278,19 +278,19 @@ uint8 GPIO_readPort(GPIO_port_number_t portNumber){
         switch (portNumber)
         {
         case PORTA_ID:
-            return PORTA;
+            return PINA;
             break;
         
         case PORTB_ID:
-            return PORTB;
+            return PINB;
             break;
         
         case PORTC_ID:
-            return PORTC;
+            return PINC;
             break;
         
         case PORTD_ID:
-            return PORTD;
+            return PIND;
             break;
             
         }
@@ -449,10 +449,10 @@ uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t p
             switch (portHalf)
             {
             case GPIO_FIRST_HALF:
-                return (PORTA & 0x0F);
+                return (PINA & 0x0F);
                 break;
             case GPIO_SECOND_HALF:
-                return ((PORTA & 0xF0)>>4);
+                return ((PINA & 0xF0)>>4);
                 break;
             }
             break;
@@ -460,10 +460,10 @@ uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t p
             switch (portHalf)
             {
             case GPIO_FIRST_HALF:
-                return (PORTB & 0x0F);
+                return (PINB & 0x0F);
                 break;
             case GPIO_SECOND_HALF:
-                return ((PORTB & 0xF0)>>4);
+                return ((PINB & 0xF0)>>4);
                 break;
             }
             break;
@@ -471,10 +471,10 @@ uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t p
             switch (portHalf)
             {
             case GPIO_FIRST_HALF:
-                return (PORTC & 0x0F);
+                return (PINC & 0x0F);
                 break;
             case GPIO_SECOND_HALF:
-                return ((PORTC & 0xF0)>>4);
+                return ((PINC & 0xF0)>>4);
                 break;
             }
             break;
@@ -482,10 +482,10 @@ uint8 GPIO_readHalfPort(GPIO_port_number_t portNumber, GPIO_half_port_number_t p
             switch (portHalf)
             {
             case GPIO_FIRST_HALF:
-                return (PORTD & 0x0F);
+                return (PIND & 0x0F);
                 break;
             case GPIO_SECOND_HALF:
-                return ((PORTD & 0xF0)>>4);
+                return ((PIND & 0xF0)>>4);
                 break;
             }
             break;
