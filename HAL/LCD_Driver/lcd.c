@@ -148,6 +148,26 @@ void LCD_displayString(const uint8 * a_stringToDisplay){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_displayStringRowColumn
+* [Description]: Used to display string on the LCD on a specific row and column
+*                SMALL NOTE: counting start at 0 (EX: first row is at 0 index)
+* [Args]:
+*   [in1]: const uint8 *: stringToDisplay: A pointer to constant data pointing to 
+*         the string you want to display on the LCD.
+*   [in2]: uint8: row: the row at which the string will be displayed
+*   [in3]: uint8: column: the column at which the string will start being displayed.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_displayStringRowColumn(const uint8 * a_stringToDisplay, uint8 a_row, uint8 a_column){
+    LCD_goToRowColumn(a_row, a_column);
+    LCD_displayString(a_stringToDisplay);
+}
+
+/*
+==============================================================================
 * [Function Name]: LCD_goTowRowColumn
 * [Description]: Used to go to a specific location (row,column) on the LCD.
 * [Args]:
