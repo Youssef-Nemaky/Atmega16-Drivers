@@ -47,7 +47,7 @@
 #define LCD_CMD_RETURN_HOME                  (0x02)
 #define LCD_CMD_DISP_OFF_CURSOR_OFF          (0x08)
 #define LCD_CMD_DISP_OFF_CURSOR_ON           (0x0A)
-#define LCD_CMD_DISP_ON_CURSOR_OFF           (0xOC)
+#define LCD_CMD_DISP_ON_CURSOR_OFF           (0x0C)
 #define LCD_CMD_DISP_ON_CURSOR_ON            (0x0F)
 #define LCD_CMD_DISP_ON_CURSOR_BLINK         (0x0E)
 #define LCD_CMD_TWO_LINES_MODE               (0x38)
