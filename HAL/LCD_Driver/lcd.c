@@ -104,6 +104,30 @@ void LCD_sendCommand(uint8 a_cmd){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_displayCharacter
+* [Description]: Used to display a character on the LCD.
+* [Args]:
+*   [in]: uint8: chracterToDisplay: The character you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_displayCharacter(uint8 a_characterToDisplay){
+    #if (LCD_MODE == LCD_FOUR_BIT_MODE)
+    GPIO_writeHalfPort(LCD_DATA_PORT, GET_HIGH_NIBBLE(a_characterToDisplay), LCD_PORT_HALF);
+    LCD_writingSequence(LCD_SENDING_DATA);
+
+    GPIO_writeHalfPort(LCD_DATA_PORT, GET_LOW_NIBBLE(a_characterToDisplay), LCD_PORT_HALF);
+    LCD_writingSequence(LCD_SENDING_DATA);
+    #elif (LCD_MODE == LCD_EIGHT_BIT_MODE)
+    GPIO_writePort(LCD_DATA_PORT, a_characterToDisplay);
+    LCD_writingSequence(LCD_SENDING_DATA);
+    #endif    
+}
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
