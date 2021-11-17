@@ -37,6 +37,46 @@ static void LCD_writingSequence(uint8 a_option);
 
 /*
 ==============================================================================
+* [Function Name]: LCD_init
+* [Description]: Used to initialize the LCD by setting the right port direction.
+* [Args]:
+*   [in]: none
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_init(){
+
+    /* Set the port direction for LCD and init the LCD */
+
+    /* Set control pins to be output */
+    GPIO_setPinDirection(LCD_CMD_PORT, LCD_RS, PIN_OUTPUT);
+    GPIO_setPinDirection(LCD_CMD_PORT, LCD_RW, PIN_OUTPUT);
+    GPIO_setPinDirection(LCD_CMD_PORT, LCD_EN, PIN_OUTPUT);
+
+
+    #if (LCD_MODE == LCD_FOUR_BIT_MODE)
+    GPIO_setHalfPortDirection(LCD_DATA_PORT, PORT_OUTPUT, LCD_PORT_HALF);
+    LCD_sendCommand(LCD_CMD_RETURN_HOME);
+    LCD_sendCommand(LCD_CMD_TWO_LINES_4_BIT_MODE);
+
+    #else
+    GPIO_setPortDirection(LCD_DATA_PORT, PORT_OUTPUT);
+    LCD_sendCommand(LCD_CMD_TWO_LINES_8_BIT_MODE);
+
+    #endif
+
+    LCD_sendCommand(LCD_CMD_DISP_ON_CURSOR_OFF);
+
+    LCD_clearScreen();
+    LCD_displayString("LCD Initialized!");
+    _delay_ms(500);
+    LCD_clearScreen();
+}
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
