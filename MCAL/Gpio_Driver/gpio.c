@@ -315,62 +315,149 @@ void GPIO_setHalfPortDirection(GPIO_port_number_t portNumber, GPIO_port_mode_t p
     } else {
         switch (portNumber){
         case PORTA_ID:
-            switch (portMode)
-            {
+            switch (portMode){
             case PORT_OUTPUT:
-                DDRA |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRA |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRA |= 0xF0;
+                    break;
+                }
                 break;
             case PORT_INPUT:
-                DDRA &= 0xF0;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRA &= 0xF0;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRA &= 0x0F;
+                    break;
+                }
                 break;
             case PORT_INPUT_INTERNAL_PULLUP:
-                DDRA &= 0xF0;
-                PORTA |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRA &= 0xF0;
+                    PORTA |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRA &= 0x0F;
+                    PORTA |= 0xF0;
+                    break;
+                }
                 break;
             }
             break;
+
         case PORTB_ID:
-            switch (portMode)
-            {
+            switch (portMode){
             case PORT_OUTPUT:
-                DDRB |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRB |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRB |= 0xF0;
+                    break;
+                }
                 break;
             case PORT_INPUT:
-                DDRB &= 0xF0;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRB &= 0xF0;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRB &= 0x0F;
+                    break;
+                }
                 break;
             case PORT_INPUT_INTERNAL_PULLUP:
-                DDRB &= 0xF0;
-                PORTB |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRB &= 0xF0;
+                    PORTB |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRB &= 0x0F;
+                    PORTB |= 0xF0;
+                    break;
+                }
                 break;
             }
             break;
+
         case PORTC_ID:
-            switch (portMode)
-            {
+            switch (portMode){
             case PORT_OUTPUT:
-                DDRC |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRC |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRC |= 0xF0;
+                    break;
+                }
                 break;
             case PORT_INPUT:
-                DDRC &= 0xF0;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRC &= 0xF0;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRC &= 0x0F;
+                    break;
+                }
                 break;
             case PORT_INPUT_INTERNAL_PULLUP:
-                DDRC &= 0xF0;
-                PORTC |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRC &= 0xF0;
+                    PORTC |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRC &= 0x0F;
+                    PORTC |= 0xF0;
+                    break;
+                }
                 break;
             }
             break;
+
         case PORTD_ID:
-            switch (portMode)
-            {
+            switch (portMode){
             case PORT_OUTPUT:
-                DDRD |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRD |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRD |= 0xF0;
+                    break;
+                }
                 break;
             case PORT_INPUT:
-                DDRD &= 0xF0;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRD &= 0xF0;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRD &= 0x0F;
+                    break;
+                }
                 break;
             case PORT_INPUT_INTERNAL_PULLUP:
-                DDRD &= 0xF0;
-                PORTD |= 0x0F;
+                switch (portHalf){
+                case GPIO_FIRST_HALF:
+                    DDRD &= 0xF0;
+                    PORTD |= 0x0F;
+                    break;
+                case GPIO_SECOND_HALF:
+                    DDRD &= 0x0F;
+                    PORTD |= 0xF0;
+                    break;
+                }
                 break;
             }
             break;
