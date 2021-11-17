@@ -80,14 +80,106 @@
 *                                Function Prototypes  
 ==============================================================================
 */
-/* DOCUMENTATION NEEDED */
+
+/*
+==============================================================================
+* [Function Name]: LCD_init
+* [Description]: Used to initialize the LCD by setting the right port direction.
+* [Args]:
+*   [in]: none
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_init();
+
+/*
+==============================================================================
+* [Function Name]: LCD_sendCommand
+* [Description]: Used to send a command to the LCD.
+*                (EX: 0x02 which is clearscreen)
+* [Args]:
+*   [in]: uint8: cmd the command you want to send to the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_sendCommand(uint8 a_cmd);
+
+/*
+==============================================================================
+* [Function Name]: LCD_displayCharacter
+* [Description]: Used to display a character on the LCD.
+* [Args]:
+*   [in]: uint8: chracterToDisplay: The character you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_displayCharacter(uint8 a_characterToDisplay);
+
+/*
+==============================================================================
+* [Function Name]: LCD_displayString
+* [Description]: Used to display a string on the LCD.
+* [Args]:
+*   [in]: const uint8 *: stringToDisplay: A pointer to constant data pointing to 
+*         the string you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_displayString(const uint8 * a_stringToDisplay);
+
+/*
+==============================================================================
+* [Function Name]: LCD_goTowRowColumn
+* [Description]: Used to go to a specific location (row,column) on the LCD.
+* [Args]:
+*   [in1]: uint8: row: the row you want to jump to.
+*   [in2]: uint8: column: the column you want to jump to.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_goToRowColumn(uint8 a_row, uint8 a_column);
+
+/*
+==============================================================================
+* [Function Name]: LCD_displayStringRowColumn
+* [Description]: Used to display string on the LCD on a specific row and column
+*                SMALL NOTE: counting start at 0 (EX: first row is at 0 index)
+* [Args]:
+*   [in1]: const uint8 *: stringToDisplay: A pointer to constant data pointing to 
+*         the string you want to display on the LCD.
+*   [in2]: uint8: row: the row at which the string will be displayed
+*   [in3]: uint8: column: the column at which the string will start being displayed.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_displayStringRowColumn(const uint8 * a_stringToDisplay, uint8 a_row, uint8 a_column);
+
+/*
+==============================================================================
+* [Function Name]: LCD_clearScreen
+* [Description]: Used to clear the LCD screen.
+* [Args]:
+*   [in]: none
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
 void LCD_clearScreen();
+
+
 void LCD_intgerToString(sint32 a_numberToString);
 
 #endif
