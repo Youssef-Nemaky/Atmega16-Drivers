@@ -11,9 +11,16 @@
 
 /*
 ==============================================================================
-*                          Static Function Prototypes  
+*                                LCD Macros  
 ==============================================================================
 */
+#ifndef GET_HIGH_NIBBLE
+#define GET_HIGH_NIBBLE(VAR) ((VAR & 0xF0)>>4)
+#endif
+
+#ifndef GET_LOW_NIBBLE
+#define GET_LOW_NIBBLE(VAR) ((VAR & 0x0F))
+#endif
 
 
 /*
