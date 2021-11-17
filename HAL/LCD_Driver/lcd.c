@@ -148,6 +148,37 @@ void LCD_displayString(const uint8 * a_stringToDisplay){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_goTowRowColumn
+* [Description]: Used to go to a specific location (row,column) on the LCD.
+* [Args]:
+*   [in1]: uint8: row: the row you want to jump to.
+*   [in2]: uint8: column: the column you want to jump to.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_goToRowColumn(uint8 a_row, uint8 a_column){
+    uint8 cmdToSend;
+    switch (a_row){
+    case 0:
+        cmdToSend = LCD_CMD_FIRST_LINE_ADDRESS + a_column;
+        break;
+    case 1:
+        cmdToSend = LCD_CMD_SECOND_LINE_ADDRESS + a_column;
+        break;
+    case 2:
+        cmdToSend = LCD_CMD_THRID_LINE_ADDRESS + a_column;
+        break;
+    case 3:
+        cmdToSend = LCD_CMD_FOURTH_LINE_ADDRESS + a_column;
+        break;
+    }
+    LCD_sendCommand(cmdToSend);
+}
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
