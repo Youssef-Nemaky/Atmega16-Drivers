@@ -199,6 +199,22 @@ void LCD_goToRowColumn(uint8 a_row, uint8 a_column){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_clearScreen
+* [Description]: Used to clear the LCD screen.
+* [Args]:
+*   [in]: none
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_clearScreen(){
+    LCD_sendCommand(LCD_CMD_CLEAR_DISP);
+}
+
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
