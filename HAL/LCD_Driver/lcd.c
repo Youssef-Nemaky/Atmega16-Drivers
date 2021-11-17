@@ -77,6 +77,33 @@ void LCD_init(){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_sendCommand
+* [Description]: Used to send a command to the LCD.
+*                (EX: 0x02 which is clearscreen)
+* [Args]:
+*   [in]: uint8: cmd the command you want to send to the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_sendCommand(uint8 a_cmd){
+    #if (LCD_MODE == LCD_FOUR_BIT_MODE)
+    GPIO_writeHalfPort(LCD_DATA_PORT, GET_HIGH_NIBBLE(a_cmd), LCD_PORT_HALF);
+    LCD_writingSequence(LCD_SENDING_COMMAND);
+    
+    GPIO_writeHalfPort(LCD_DATA_PORT, GET_LOW_NIBBLE(a_cmd), LCD_PORT_HALF);
+    LCD_writingSequence(LCD_SENDING_COMMAND);
+
+    #elif (LCD_MODE == LCD_EIGHT_BIT_MODE)
+    GPIO_writePort(LCD_DATA_PORT, a_cmd);
+    LCD_writingSequence(LCD_SENDING_COMMAND);
+    #endif
+}
+
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
