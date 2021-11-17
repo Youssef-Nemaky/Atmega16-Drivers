@@ -82,12 +82,12 @@
 */
 /* DOCUMENTATION NEEDED */
 void LCD_init();
-void LCD_sendCommand(uint8 cmd);
-void LCD_displayCharacter(uint8 characterToDisplay);
-void LCD_displayString(const uint8 * stringToDisplay);
-void LCD_goToRowColumn(uint8 row, uint8 column);
-void LCD_displayStringRowColumn(const uint8 * stringToDisplay, uint8 row, uint8 column);
+void LCD_sendCommand(uint8 a_cmd);
+void LCD_displayCharacter(uint8 a_characterToDisplay);
+void LCD_displayString(const uint8 * a_stringToDisplay);
+void LCD_goToRowColumn(uint8 a_row, uint8 a_column);
+void LCD_displayStringRowColumn(const uint8 * a_stringToDisplay, uint8 a_row, uint8 a_column);
 void LCD_clearScreen();
-void LCD_intgerToString(sint32);
+void LCD_intgerToString(sint32 a_numberToString);
 
 #endif
