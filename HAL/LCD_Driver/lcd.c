@@ -128,6 +128,26 @@ void LCD_displayCharacter(uint8 a_characterToDisplay){
 
 /*
 ==============================================================================
+* [Function Name]: LCD_displayString
+* [Description]: Used to display a string on the LCD.
+* [Args]:
+*   [in]: const uint8 *: stringToDisplay: A pointer to constant data pointing to 
+*         the string you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_displayString(const uint8 * a_stringToDisplay){
+    uint8 counter = 0; 
+    while(a_stringToDisplay[counter] != '\0'){
+        LCD_displayCharacter(a_stringToDisplay[counter]);
+        counter++;
+    }
+}
+
+/*
+==============================================================================
 *                               Static Functions  
 ==============================================================================
 */
