@@ -212,6 +212,64 @@ void LCD_clearScreen(){
     LCD_sendCommand(LCD_CMD_CLEAR_DISP);
 }
 
+/*
+==============================================================================
+* [Function Name]: LCD_displayInteger
+* [Description]: Used to display an integer on the LCD screen.
+* [Args]:
+*   [in]: sint32 a_numberToDisplay: the number you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_displayInteger(sint32 a_numberToDisplay){
+    /* Why 12?
+     * The largest number in a signed number of 32 bits is 2,147,483,647 = 10 numbers
+     * and the lowest number is -2,147,483,648 -> 10 numbers + 1 for the sign = 11 numbers
+     * and if we add the string terminator we have 12 number(buffer size)     
+     */
+    uint8 buffer[12];
+
+    uint8 counter = 0, i = 0;
+
+    if(a_numberToDisplay == 0){
+        /* display zero on the LCD */
+        LCD_displayCharacter('0');
+        /* Exit from the function by returning */
+        return;
+    } else if(a_numberToDisplay < 0){
+        /* in case of negative number */
+        
+        /* Add the sign to the buffer */
+        buffer[counter++] = '-';
+        /* Make the number positive */
+        a_numberToDisplay = -a_numberToDisplay;
+
+        /* start i at 1 to leave the sign at reversing the number */
+        i = 1;
+    } 
+
+    while(a_numberToDisplay != 0){
+        /* Add the last digit in the number to the buffer */
+        buffer[counter++] = (a_numberToDisplay % 10) + '0';
+
+        /* Update the number after dividing by 10 */
+        a_numberToDisplay /= 10;
+    }
+
+    /* Add the string terminator \0 to the buffer */
+    buffer[counter--] = '\0';
+
+    /* Now we need to reverse the number */
+    for(;i < counter; i++, counter--){
+        buffer[i] = buffer[i] ^ buffer[counter]; 
+        buffer[counter] = buffer[i] ^ buffer[counter]; 
+        buffer[i] = buffer[i] ^ buffer[counter]; 
+    }
+    /* Display the number */
+    LCD_displayString(buffer);
+}
 
 /*
 ==============================================================================
