@@ -179,7 +179,17 @@ void LCD_displayStringRowColumn(const uint8 * a_stringToDisplay, uint8 a_row, ui
 */
 void LCD_clearScreen();
 
-
-void LCD_intgerToString(sint32 a_numberToString);
+/*
+==============================================================================
+* [Function Name]: LCD_displayInteger
+* [Description]: Used to display an integer on the LCD screen.
+* [Args]:
+*   [in]: sint32 a_numberToDisplay: the number you want to display on the LCD.
+*   [out]: none
+*   [in/out]: none
+* [Returns]: none
+==============================================================================
+*/
+void LCD_displayInteger(sint32 a_numberToDisplay);
 
 #endif
